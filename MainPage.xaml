@@ -1,0 +1,106 @@
+﻿<Page
+    x:Class="PassProtect.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid x:Name="MainWindowGrid">
+        <!--TITLE BAR-->
+        <Grid.RowDefinitions>
+            <!--rendering the title bar-->
+            <RowDefinition Height="32" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <!--END OF TITLE BAR-->
+
+        <!--APP CONTENT-->
+        <Grid Grid.Row="0" x:Name="TitleBar" Background="#FF23A676">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <!--rendering application name-->
+            <Grid Grid.Column="0" x:Name="MainTitleBar" Background="Transparent">
+                <TextBlock Text="PassProtect" VerticalAlignment="Center" FontSize="12" FontFamily="Segoe UI" FontWeight="Normal" Margin="10,0"/>
+            </Grid>
+        </Grid>
+
+        <!--APP CONTENT-->
+        <Grid x:Name="LowerGrid" Grid.Row="1">
+            <Grid x:Name="SideBar" Background="#FF181819" MinWidth="320" HorizontalAlignment="Left" Width="320">
+                <StackPanel x:Name="sideBarSearch" Margin="0,11,0,11" HorizontalAlignment="Center" Width="300">
+                    <!--rendering title-->
+                    <TextBlock Foreground="White" FontSize="25" HorizontalAlignment="Center" Text="Accounts:" FontWeight="Normal" FontStyle="Normal" Height="45"/>
+
+                    <!--rendering search and add button-->
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Top" Grid.Column="1" HorizontalAlignment="Center">
+                        <TextBox x:Name="SearchBox" PlaceholderText="Search accounts" Margin="0,0,10,0" Width="242" TextChanged="SearchBox_TextChanged"/>
+                        <Button x:Name="addAccountButton" Content="+" Click="addAccountButton_Click"/>
+                    </StackPanel>
+                </StackPanel>
+                <ListView x:Name="accountList" Margin="10,100,0,10" Background="#FF313132" HorizontalAlignment="Left" Width="300" SelectionChanged="accountList_SelectionChanged">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Vertical">
+                                <TextBlock Text="{Binding Name}" FontSize="20" />
+                                <TextBlock Text="{Binding Username}" FontSize="15"/>
+                                <TextBlock Text="{Binding Email}" FontSize="15"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="Padding" Value="3"/>
+                            <Setter Property="Margin" Value="4"/>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                </ListView>
+            </Grid>
+            <Grid x:Name="NoAccountWindow" Background="#FF1F1F1E" FocusVisualPrimaryBrush="White" Margin="320,0,0,80">
+                <TextBlock x:Name="selectAccountText" Foreground="White" FontSize="25" Text="Select an account to begin&#xA;or press the + button to add an account" TextAlignment="Center" HorizontalAlignment="Center" Width="443" Height="67" VerticalAlignment="Center"/>
+            </Grid>
+            <ScrollViewer x:Name="AccountDetailScroller" Margin="320,0,0,80">
+                <Grid x:Name="AccountDetailWindow" Background="#FF1F1F1E" FocusVisualPrimaryBrush="White">
+                    <TextBox x:Name="accountNameTextBox" Margin="24,126,29,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" PlaceholderText="Enter account name" TextChanged="accountNameTextbox_TextChanged"/>
+                    <TextBlock x:Name="accountNameText" Margin="24,102,0,0" Text="Account name:" TextWrapping="Wrap" VerticalAlignment="Top" HorizontalAlignment="Left" Width="102"/>
+                    <TextBlock x:Name="usernameText" HorizontalAlignment="Left" Margin="24,190,0,0" Text="Username:" TextWrapping="Wrap" VerticalAlignment="Top"/>
+                    <TextBox x:Name="usernameTextBox" Margin="24,214,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" HorizontalAlignment="Left" Width="350" PlaceholderText="Enter username" TextChanged="usernameTextBox_TextChanged"/>
+                    <TextBlock x:Name="emailText" HorizontalAlignment="Left" Margin="24,285,0,0" Text="Email:" TextWrapping="Wrap" VerticalAlignment="Top"/>
+                    <TextBox x:Name="emailTextBox" Margin="24,309,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" HorizontalAlignment="Left" Width="350" PlaceholderText="Enter email" TextChanged="emailTextBox_TextChanged"/>
+                    <TextBlock x:Name="passwordText" HorizontalAlignment="Left" Margin="24,380,0,0" Text="Password:" TextWrapping="Wrap" VerticalAlignment="Top"/>
+                    <TextBox x:Name="passwordTextBox" Margin="24,404,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" HorizontalAlignment="Left" Width="350" PlaceholderText="enter password or generate below" TextChanged="passwordTextBox_TextChanged"/>
+                    <TextBlock x:Name="notesText" HorizontalAlignment="Left" Margin="401,190,0,0" Text="Notes:" TextWrapping="Wrap" VerticalAlignment="Top"/>
+                    <TextBox x:Name="notesTextBox" Margin="401,214,29,0" Text="" TextWrapping="Wrap" Height="259" VerticalAlignment="Top" AcceptsReturn="True" PlaceholderText="Enter notes" TextChanged="notesTextBox_TextChanged"/>
+                    <TextBlock x:Name="accountNameHeader" Foreground="White" FontSize="25" Text="Your new account" FontWeight="Normal" FontStyle="Normal" Margin="24,36,0,0" HorizontalAlignment="Left" Width="904" Height="45" VerticalAlignment="Top"/>
+                    <Button x:Name="copyPasswordButton" Content="Copy password" Margin="244,441,0,0" VerticalAlignment="Top" Width="130" Background="#FF464647" Click="copyPasswordButton_Click"/>
+                    <Button x:Name="copyUsernameButton" Content="Copy username" Margin="244,251,0,0" VerticalAlignment="Top" Width="130" Background="#FF464647" Click="copyUsernameButton_Click"/>
+                    <Button x:Name="copyEmailButton" Content="Copy email" Margin="244,346,0,0" VerticalAlignment="Top" Width="130" Background="#FF464647" Click="copyEmailButton_Click"/>
+                </Grid>
+            </ScrollViewer>
+            <Grid x:Name="OptionBar" Background="#FF313132" Margin="320,0,0,27" Height="80" VerticalAlignment="Bottom">
+                <Button x:Name="changePasswordButton" Content="Change master password" Margin="16,0,0,0" Height="47" Width="184" Click="ChangePasswordButton_Click" Background="#FF464647"/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Width="270">
+                    <Button x:Name="revertButton" Content="Revert changes" Height="47" Width="120" IsEnabled="False" Background="#FF464647" Click="revertButton_Click"/>
+                    <Button x:Name="saveButton" Content="Save changes" Height="47" IsEnabled="False" Width="120" Background="#FF464647" Click="saveButton_Click" Margin="10,0,0,0"/>
+                </StackPanel>
+                <Button x:Name="deleteEntryButton" Content="Delete account" Margin="0,0,314,0" Height="47" HorizontalAlignment="Right" IsEnabled="False" Width="184" Background="#FF464647" Click="deleteEntryButton_Click"/>
+            </Grid>
+            <Grid x:Name="StatusBar" Background="#FF292929" Margin="320,0,0,0" Height="27" VerticalAlignment="Bottom">
+                <TextBlock x:Name="timeSinceBreachText" HorizontalAlignment="Left" Margin="10,2,0,0" Text="Last password breach check:" TextWrapping="Wrap" VerticalAlignment="Top" FocusVisualPrimaryBrush="#FF838383" Foreground="#FF7E7E7E"/>
+                <Button x:Name="refreshBreachCheckButton" Content="Refresh" Height="27" Margin="326,0,0,0" Width="120" FontSize="10" Click="refreshBreachCheckButton_Click"/>
+            </Grid>
+        </Grid>
+        <Rectangle x:Name="loginRectangle" Grid.Row="1" Fill="#FF23A676" d:IsHidden="True"/>
+        <Grid.Resources>
+            <Storyboard x:Name="fadeLoginBackground">
+                <FadeOutThemeAnimation Storyboard.TargetName="loginRectangle" SpeedRatio="0.5"/>
+            </Storyboard>
+        </Grid.Resources>
+        <!--END OF APP CONTENT-->
+    </Grid>
+</Page>

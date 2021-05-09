@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<Package
+  xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+  xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest"
+  xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+  IgnorableNamespaces="uap mp">
+
+  <Identity
+    Name="56682StevenWheeler.PassProtectPasswordManager"
+    Publisher="CN=404AA89B-33AC-423B-BCDF-E030CFE0DC49"
+    Version="1.1.2.0" />
+
+  <mp:PhoneIdentity PhoneProductId="8f0bd86b-2552-49aa-b0fc-a9557b71669d" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+
+  <Properties>
+    <DisplayName>PassProtect Password Manager</DisplayName>
+    <PublisherDisplayName>Steven Wheeler</PublisherDisplayName>
+    <Logo>Assets\StoreLogo.png</Logo>
+  </Properties>
+
+  <Dependencies>
+    <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.0.0" MaxVersionTested="10.0.0.0" />
+  </Dependencies>
+
+  <Resources>
+    <Resource Language="x-generate"/>
+  </Resources>
+
+  <Applications>
+    <Application Id="App"
+      Executable="$targetnametoken$.exe"
+      EntryPoint="PassProtect.App">
+      <uap:VisualElements
+        DisplayName="PassProtect Password Manager"
+        Square44x44Logo="Assets\Square44x44Logo.png"
+        Description="A UWP password manager"
+        BackgroundColor="transparent" Square150x150Logo="Assets\LargeTile.png">
+        <uap:SplashScreen Image="Assets\SplashScreen.png"  BackgroundColor="#23A676"/>
+        <uap:InitialRotationPreference>
+          <uap:Rotation Preference="landscape"/>
+          <uap:Rotation Preference="portrait"/></uap:InitialRotationPreference>
+        <uap:DefaultTile>
+          <uap:ShowNameOnTiles>
+            <uap:ShowOn Tile="square150x150Logo"/>
+          </uap:ShowNameOnTiles>
+        </uap:DefaultTile>
+      </uap:VisualElements>
+    </Application>
+  </Applications>
+
+  <Capabilities>
+    <Capability Name="internetClient" />
+  </Capabilities>
+</Package>
