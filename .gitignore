@@ -3,6 +3,9 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+Package.StoreAssociation.xml
+PassProtect_TemporaryKey.pfx
+
 # User-specific files
 *.rsuser
 *.suo
