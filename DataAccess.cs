@@ -44,7 +44,6 @@ namespace PassProtect
                 string formattingCommand = "INSERT INTO AccountTable VALUES (1, null, null, null, null, null);";
                 command = connection.CreateCommand(formattingCommand);
                 command.ExecuteNonQuery();
-                connection.Dispose();
             }
             return;
         }
@@ -58,7 +57,6 @@ namespace PassProtect
             string insertCommand = "INSERT INTO AccountTable VALUES (?, ?, ?, ?, ?, ?);";
             var tableCommand = connection.CreateCommand(insertCommand, null, name, email, username, password, notes);
             tableCommand.ExecuteNonQuery();
-            connection.Dispose();
         }
 
         //function to update rows in the database based on id
@@ -70,7 +68,6 @@ namespace PassProtect
             string updateCommand = "UPDATE AccountTable SET name = '" + name + "', email = '" + email + "', username = '" + username + "', password = '" + password + "', notes = '" + notes + "' WHERE ID = " + id + ";";
             var tableCommand = connection.CreateCommand(updateCommand);
             tableCommand.ExecuteNonQuery();
-            connection.Dispose();
         }
 
         //function to delete a row from the database
@@ -82,7 +79,6 @@ namespace PassProtect
             string deleteCommand = "DELETE FROM AccountTable WHERE ID = " + id + ";";
             var tableCommand = connection.CreateCommand(deleteCommand);
             tableCommand.ExecuteNonQuery();
-            connection.Dispose();
         }
 
         //function to read the information of one specific row.
@@ -102,7 +98,6 @@ namespace PassProtect
                 account.Add(new AccountList() { ID = readaccount.ID, Name = readaccount.Name, Email = readaccount.Email, Username = readaccount.Username, Password = readaccount.Password, Notes = readaccount.Notes });
             }
 
-            connection.Dispose();
             return account;
         }
 

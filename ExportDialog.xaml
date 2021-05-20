@@ -1,0 +1,21 @@
+﻿<ContentDialog
+    x:Class="PassProtect.ExportDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:PassProtect"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Title="Export database"
+    PrimaryButtonText="Export"
+    SecondaryButtonText="Cancel"
+    PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
+    SecondaryButtonClick="ContentDialog_SecondaryButtonClick">
+
+    <Grid>
+        <TextBlock HorizontalAlignment="Left" Height="59" Margin="0,-5,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="470"><Run Text="Exporting the database allows you to take manual backups and re-import"/><Run Text=" them"/><Run Text=" into PassProtect at a later date."/><LineBreak/><Run Text="The export will be encrypted with your master password"/><Run Text="."/><LineBreak/><Run/></TextBlock>
+        <PasswordBox x:Name="passwordBox" HorizontalAlignment="Center" Height="35" Margin="0,132,0,0" VerticalAlignment="Top" Width="473" Background="#66FFFFFF" PlaceholderText="Enter your master password"/>
+        <Button x:Name="folderSelectButton" Content="Select where to save the export to" Height="38" Margin="0,89,0,0" VerticalAlignment="Top" Width="473" HorizontalAlignment="Center" Click="folderSelectButton_Click"/>
+        <TextBlock x:Name="errorMessage" HorizontalAlignment="Left" Height="25" Text="Error message" TextWrapping="Wrap" VerticalAlignment="Top" Width="468" Margin="0,60,0,0" Foreground="Red" Visibility="Collapsed"/>
+    </Grid>
+</ContentDialog>

@@ -24,7 +24,7 @@
 
                 <!--rendering search and add button-->
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Top" Grid.Column="1" HorizontalAlignment="Center">
-                    <TextBox x:Name="SearchBox" PlaceholderText="Search accounts" Margin="0,0,10,0" Width="242" TextChanged="SearchBox_TextChanged"/>
+                    <TextBox x:Name="SearchBox" PlaceholderText="Search accounts" Margin="0,0,10,0" Width="242" TextChanged="SearchBox_TextChanged" Background="#66FFFFFF"/>
                     <Button x:Name="addAccountButton" Content="+" Click="addAccountButton_Click"/>
                 </StackPanel>
             </StackPanel>
@@ -66,7 +66,7 @@
                 <Button x:Name="copyUsernameButton" Content="Copy username" Margin="262,259,0,0" VerticalAlignment="Top" Width="130" Click="copyUsernameButton_Click"/>
                 <Button x:Name="copyEmailButton" Content="Copy email" Margin="262,354,0,0" VerticalAlignment="Top" Width="130" Click="copyEmailButton_Click"/>
                 <Grid x:Name="AccountWindowSpacer" Background="#FF165D43" FocusVisualPrimaryBrush="#FF165D43" Height="61" VerticalAlignment="Top" Margin="3,486,0,0"/>
-                <Button x:Name="generatePasswordButton" Content="Generate password" Margin="48,449,0,0" VerticalAlignment="Top" Width="150" Click="copyPasswordButton_Click"/>
+                <Button x:Name="generatePasswordButton" Content="Generate password" Margin="48,449,0,0" VerticalAlignment="Top" Width="150" Click="copyPasswordButton_Click" IsEnabled="False"/>
             </Grid>
         </ScrollViewer>
         <Grid x:Name="StatusBar" Background="#FF26956C" Margin="320,0,0,0" Height="27" VerticalAlignment="Bottom" Grid.RowSpan="2">
@@ -78,7 +78,7 @@
             <Button x:Name="menuButton" Content="Menu" Margin="16,0,0,0" Height="47" Width="120">
                 <Button.Flyout>
                     <MenuFlyout>
-                        <MenuFlyoutItem Text="Export database">
+                        <MenuFlyoutItem Text="Export database" Click="MenuFlyoutItem_Click_5">
                             <MenuFlyoutItem.Icon>
                                 <FontIcon Glyph="&#xE8A7;" />
                             </MenuFlyoutItem.Icon>

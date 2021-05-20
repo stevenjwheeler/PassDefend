@@ -162,13 +162,6 @@ namespace PassProtect
             refreshBreachCheckButton.Content = "Refresh";
         }
 
-        //function handles the button to change the master password
-        //private void ChangePasswordButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
-        //{
-        //    //change the master password when requested
-        //    ChangeMasterPassword();
-        //}
-
         //function to complete the changing of the master password
         private async void ChangeMasterPassword()
         {
@@ -595,6 +588,12 @@ namespace PassProtect
             accountList.Background = GetSolidColorBrush("FF2E2E2E");
             loginRectangle.Fill = GetSolidColorBrush("FF1B1B1B");
             ModifyTitleBar("FF1B1B1B");
+        }
+
+        private void MenuFlyoutItem_Click_5(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            //Export database button
+            ImportExportEngine.ExportDB();
         }
     }
 }

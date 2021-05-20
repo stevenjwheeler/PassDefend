@@ -37,7 +37,7 @@ namespace PassProtect
 
             //...send the request through to the password check phase, then respond depending on the response
             ContentDialogButtonClickDeferral deferral = args.GetDeferral();
-            if (await AsyncPasswordCheck())
+            if (await AsyncPasswordCheck(masterPasswordBox.Password))
             {
                 //if password check confirmed password, send ok declaration
                 this.Result = PasswordPromptResult.SignInOK;
@@ -64,7 +64,7 @@ namespace PassProtect
         }
 
         //check the password and respond with true if correct or false if incorrect
-        private async Task<bool> AsyncPasswordCheck()
+        public async Task<bool> AsyncPasswordCheck(string password)
         {
             try
             {
@@ -78,7 +78,7 @@ namespace PassProtect
                 Array.Copy(hashBytes, 0, salt, 0, 64);
 
                 //hash the inputted password with the salt
-                var pbkdf2 = new Rfc2898DeriveBytes(masterPasswordBox.Password, salt, 10000);
+                var pbkdf2 = new Rfc2898DeriveBytes(password, salt, 10000);
                 byte[] hash = pbkdf2.GetBytes(20);
 
                 int approved = 1;
