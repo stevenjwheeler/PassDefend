@@ -27,6 +27,7 @@
     <GenerateTestArtifacts>True</GenerateTestArtifacts>
     <AppxBundle>Always</AppxBundle>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
+    <AppxSymbolPackageEnabled>True</AppxSymbolPackageEnabled>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -230,9 +231,6 @@
     </PackageReference>
     <PackageReference Include="sqlite-net-sqlcipher">
       <Version>1.7.335</Version>
-    </PackageReference>
-    <PackageReference Include="SQLitePCLRaw.provider.e_sqlite3">
-      <Version>2.0.4</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>

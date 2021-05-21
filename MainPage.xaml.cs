@@ -144,7 +144,8 @@ namespace PassProtect
         {
             timeSinceBreachText.Text = "Checking for password breaches...";
             refreshBreachCheckButton.Content = "...";
-            foreach (var account in AccountData) { //for each account in account data...
+            foreach (var account in AccountData) 
+            { //for each account in account data...
                 bool passCheck = await BreachCheck.checkPassword(account.Password); //check the password against the API
                 if (passCheck == true) //if the password is found in the breach list...
                 {

@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Blend for Visual Studio Version 16
+# Visual Studio Version 16
 VisualStudioVersion = 16.0.30621.155
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PassProtect", "PassProtect.csproj", "{8C649617-BC47-499A-905E-BB471BE2D051}"
@@ -35,6 +35,8 @@ Global
 		{8C649617-BC47-499A-905E-BB471BE2D051}.Debug|x86.Build.0 = Debug|x86
 		{8C649617-BC47-499A-905E-BB471BE2D051}.Debug|x86.Deploy.0 = Debug|x86
 		{8C649617-BC47-499A-905E-BB471BE2D051}.Release|Any CPU.ActiveCfg = Release|x86
+		{8C649617-BC47-499A-905E-BB471BE2D051}.Release|Any CPU.Build.0 = Release|x86
+		{8C649617-BC47-499A-905E-BB471BE2D051}.Release|Any CPU.Deploy.0 = Release|x86
 		{8C649617-BC47-499A-905E-BB471BE2D051}.Release|ARM.ActiveCfg = Release|ARM
 		{8C649617-BC47-499A-905E-BB471BE2D051}.Release|ARM.Build.0 = Release|ARM
 		{8C649617-BC47-499A-905E-BB471BE2D051}.Release|ARM.Deploy.0 = Release|ARM
