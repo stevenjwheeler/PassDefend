@@ -78,7 +78,7 @@
             <Button x:Name="menuButton" Content="Menu" Margin="16,0,0,0" Height="47" Width="120">
                 <Button.Flyout>
                     <MenuFlyout>
-                        <MenuFlyoutItem Text="Export database" Click="MenuFlyoutItem_Click_5">
+                        <MenuFlyoutItem Text="Export database" Click="MenuFlyoutItem_Click_5" IsEnabled="False">
                             <MenuFlyoutItem.Icon>
                                 <FontIcon Glyph="&#xE8A7;" />
                             </MenuFlyoutItem.Icon>
