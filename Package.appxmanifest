@@ -7,7 +7,7 @@
   IgnorableNamespaces="uap mp">
 
   <Identity
-    Name="56682StevenWheeler.PassProtectPasswordManager"
+    Name="StevenWheeler.PassProtect"
     Publisher="CN=404AA89B-33AC-423B-BCDF-E030CFE0DC49"
     Version="1.2.0.0" />
 
