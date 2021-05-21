@@ -47,7 +47,7 @@ namespace PassProtect
                     MainPage.userpass = changePasswordBoxMain.Password;
                     if (passchangeactive == true && MainPage.onboarding == false)
                     {
-                        DataAccess.changeDBPassword(prevpass, changePasswordBoxMain.Password);
+                        DataAccess.changeDBPassword(MainPage.dbconnection, changePasswordBoxMain.Password);
                     }
                     this.Result = PasswordChangeResult.PassChangeOK;
                 }

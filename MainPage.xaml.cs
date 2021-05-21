@@ -1,4 +1,5 @@
 ﻿using System;
+using SQLite;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using Windows.UI.ViewManagement;
@@ -12,10 +13,6 @@ using System.Reflection;
 
 namespace PassProtect
 {
-    /* TO DO:
-     * Password time to live
-     * Password generation
-     */
     public partial class MainPage : Page
     {
         //prepare application files
@@ -26,6 +23,7 @@ namespace PassProtect
         public static bool passchangeactive = false;
         public bool newaccount = false;
         public int selectedID = 0;
+        public static SQLiteConnection dbconnection { get; set; }
 
         //this variable is to change the behaviour of the password change dialog when setting first password
         public static bool onboarding { get; set; }
@@ -100,7 +98,8 @@ namespace PassProtect
 
                     //begin decryption process
                     //create the credential database if necessary, otherwise continue execution
-                    await DataAccess.InitializeDatabase(userpass);
+                    dbconnection = DataAccess.OpenDB(userpass);
+                    DataAccess.InitializeDatabase(dbconnection);
 
                     //first load of database accounts into account bar
                     RefreshAccounts();
@@ -134,7 +133,7 @@ namespace PassProtect
                 AccountData.Clear();
             }
             //request account data from database
-            AccountData = DataAccess.GetAccountData(userpass);
+            AccountData = DataAccess.GetAccountData(dbconnection);
             AccountData.RemoveAt(0);
             //display account data in the account bar
             accountList.ItemsSource = AccountData;
@@ -304,7 +303,7 @@ namespace PassProtect
             if (newaccount == true)
             {
                 //add new account entry to database
-                DataAccess.AddData(userpass, accountNameTextBox.Text, emailTextBox.Text, usernameTextBox.Text, passwordTextBox.Text, notesTextBox.Text);
+                DataAccess.AddData(dbconnection, accountNameTextBox.Text, emailTextBox.Text, usernameTextBox.Text, passwordTextBox.Text, notesTextBox.Text);
                 RefreshAccounts();
                 saveButton.IsEnabled = false;
                 revertButton.IsEnabled = false;
@@ -313,7 +312,7 @@ namespace PassProtect
             else
             {
                 //update the account entry in the database
-                DataAccess.UpdateData(userpass, selectedID, accountNameTextBox.Text, emailTextBox.Text, usernameTextBox.Text, passwordTextBox.Text, notesTextBox.Text);
+                DataAccess.UpdateData(dbconnection, selectedID, accountNameTextBox.Text, emailTextBox.Text, usernameTextBox.Text, passwordTextBox.Text, notesTextBox.Text);
                 RefreshAccounts();
                 saveButton.IsEnabled = false;
                 revertButton.IsEnabled = false;
@@ -455,7 +454,7 @@ namespace PassProtect
 
             if (result == ContentDialogResult.Primary)
             {
-                DataAccess.DeleteData(userpass, selectedID);
+                DataAccess.DeleteData(dbconnection, selectedID);
                 RefreshAccounts();
                 accountList.SelectedIndex = -1;
                 this.AccountDetailScroller.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
@@ -593,7 +592,7 @@ namespace PassProtect
         private void MenuFlyoutItem_Click_5(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
             //Export database button
-            ImportExportEngine.ExportDB();
+            ImportExportEngine.ExportDB(userpass);
         }
     }
 }
