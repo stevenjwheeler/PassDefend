@@ -9,7 +9,7 @@
   <Identity
     Name="56682StevenWheeler.PassProtectPasswordManager"
     Publisher="CN=404AA89B-33AC-423B-BCDF-E030CFE0DC49"
-    Version="1.1.2.0" />
+    Version="1.2.0.0" />
 
   <mp:PhoneIdentity PhoneProductId="8f0bd86b-2552-49aa-b0fc-a9557b71669d" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
