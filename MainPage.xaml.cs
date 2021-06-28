@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Windows.ApplicationModel.DataTransfer;
 using System.Reflection;
+using Windows.UI.Xaml;
 
 namespace PassProtect
 {
@@ -24,6 +25,7 @@ namespace PassProtect
         public bool newaccount = false;
         public int selectedID = 0;
         public static SQLiteConnection dbconnection { get; set; }
+        public int activeWelcome = 0;
 
         //this variable is to change the behaviour of the password change dialog when setting first password
         public static bool onboarding { get; set; }
@@ -42,7 +44,13 @@ namespace PassProtect
             //stylize the window to match the colour scheme of the application
             ColorScheme_CheckForScheme();
 
-            //begin login process
+            //inform of page load completion
+            Loaded += Page_Loaded;
+        }
+
+        //function that activates upon page load completion
+        private void Page_Loaded(object sender, RoutedEventArgs e)
+        {
             LoginSequence();
         }
 
@@ -77,7 +85,8 @@ namespace PassProtect
             {
                 //prompt user to set password
                 onboarding = true;
-                ChangeMasterPassword();
+                //Frame.Navigate(typeof(OnboardingPage)); //navigate to the new onboarding page
+                ChangeMasterPassword(); //comment this line out if using the new onboarding page
             }
         }
 
@@ -151,8 +160,8 @@ namespace PassProtect
                 {
                     ContentDialog deleteConfirmDialog = new ContentDialog
                     {
-                        Title = "Breached password identified",
-                        Content = "The password to your '" + account.Name + "' account appeared in an online breach, please change it.",
+                        Title = "WARNING! Breach detected on your " + account.Name + " account.",
+                        Content = "The password to your '" + account.Name + "' account appeared in an online breach as identified by HaveIBeenPwned. Please change the password on the service as soon as possible.",
                         PrimaryButtonText = "Okay"
                     };
                     ContentDialogResult result = await deleteConfirmDialog.ShowAsync();
@@ -447,7 +456,7 @@ namespace PassProtect
             ContentDialog deleteConfirmDialog = new ContentDialog
             {
                 Title = "Are you sure?",
-                Content = "You are about to delete an account. \r\nThis cannot be undone!",
+                Content = "You are about to delete this account. \r\nThis cannot be undone!",
                 PrimaryButtonText = "Delete",
                 SecondaryButtonText = "Cancel"
             };
@@ -541,6 +550,46 @@ namespace PassProtect
             await FileIO.WriteTextAsync(colorschemefile, "black");
         }
 
+        private void MenuFlyoutItem_Click_5(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            //Export database button
+            ImportExportEngine.ExportDB(userpass);
+        }
+
+        private void MenuFlyoutItem_Click_6(object sender, RoutedEventArgs e) 
+        {
+            //Reset button
+
+        }
+
+        private void MenuFlyoutItem_Click_7(object sender, RoutedEventArgs e)
+        {
+            //DEVELOPER RESET BUTTON
+            resetProgram();
+        }
+
+        private async void resetProgram()
+        {
+            //The resetProgram function deletes all user data and returns the program back to the freshly installed state
+            if (await localFolder.TryGetItemAsync("hash") != null) //if login file exists
+            {
+                StorageFile deleteTarget = await localFolder.GetFileAsync("hash");
+                await deleteTarget.DeleteAsync(); //delete the hash
+            }
+            if (await localFolder.TryGetItemAsync("core") != null) //if core exists
+            {
+                DataAccess.CloseDB(dbconnection); //close core
+                StorageFile deleteTarget = await localFolder.GetFileAsync("core");
+                await deleteTarget.DeleteAsync(); //delete the core
+            }
+            if (await localFolder.TryGetItemAsync("colorScheme") != null) //if color personalisation exists
+            {
+                StorageFile deleteTarget = await localFolder.GetFileAsync("colorScheme");
+                await deleteTarget.DeleteAsync(); //delete the color
+            }
+            await CoreApplication.RequestRestartAsync(""); //reboot the application
+        }
+
         private void ColorScheme_Green()
         {
             AccountDetailWindow.Background = GetSolidColorBrush("FF165D43");
@@ -588,12 +637,6 @@ namespace PassProtect
             accountList.Background = GetSolidColorBrush("FF2E2E2E");
             loginRectangle.Fill = GetSolidColorBrush("FF1B1B1B");
             ModifyTitleBar("FF1B1B1B");
-        }
-
-        private void MenuFlyoutItem_Click_5(object sender, Windows.UI.Xaml.RoutedEventArgs e)
-        {
-            //Export database button
-            ImportExportEngine.ExportDB(userpass);
         }
     }
 }

@@ -95,6 +95,18 @@
                             </MenuFlyoutItem.Icon>
                         </MenuFlyoutItem>
                         <MenuFlyoutSeparator />
+                        <MenuFlyoutItem Text="Reset PassProtect" Click="MenuFlyoutItem_Click_6" IsEnabled="False">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xE783;" />
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                        <MenuFlyoutItem Text="[DEV] RESET - NO WARNING" Click="MenuFlyoutItem_Click_7">
+                            <!-- THIS BUTTON IS TO BE REMOVED FROM MENU IN PRODUCTION -->
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xE783;" />
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                        <MenuFlyoutSeparator />
                         <MenuFlyoutSubItem Text="Change color scheme">
                             <MenuFlyoutSubItem.Icon>
                                 <FontIcon Glyph="&#xE790;" />
