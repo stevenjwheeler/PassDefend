@@ -21,14 +21,10 @@ namespace PassProtect
 
         //prepare basic variables
         public static string userpass { get; set; }
-        public static bool passchangeactive = false;
         public bool newaccount = false;
         public int selectedID = 0;
         public static SQLiteConnection dbconnection { get; set; }
         public int activeWelcome = 0;
-
-        //this variable is to change the behaviour of the password change dialog when setting first password
-        public static bool onboarding { get; set; }
 
         //prepare storage for the accounts
         internal List<DataAccess.AccountList> AccountData { get; set; }
@@ -83,10 +79,8 @@ namespace PassProtect
             }
             else //if login file does not exist
             {
-                //prompt user to set password
-                onboarding = true;
                 //Frame.Navigate(typeof(OnboardingPage)); //navigate to the new onboarding page
-                ChangeMasterPassword(); //comment this line out if using the new onboarding page
+                CreatePassword(); //comment this line out if using the new onboarding page
             }
         }
 
@@ -152,7 +146,6 @@ namespace PassProtect
         private async void CheckForBreaches()
         {
             timeSinceBreachText.Text = "Checking for password breaches...";
-            refreshBreachCheckButton.Content = "...";
             foreach (var account in AccountData) 
             { //for each account in account data...
                 bool passCheck = await BreachCheck.checkPassword(account.Password); //check the password against the API
@@ -168,39 +161,50 @@ namespace PassProtect
                 }
             }
             timeSinceBreachText.Text = "Last password breach check: " + DateTime.Now;
-            refreshBreachCheckButton.Content = "Refresh";
         }
 
-        //function to complete the changing of the master password
-        private async void ChangeMasterPassword()
+        //function to complete the creation of the master password
+        private async void CreatePassword()
         {
-            passchangeactive = true;
             bool dialogNotCompleted = true;
             //show the change password dialog...
-            PasswordCreation changePasswordDialog = new PasswordCreation();
+            PasswordCreation createPasswordDialog = new PasswordCreation();
             while (dialogNotCompleted == true)
             {
-                await changePasswordDialog.ShowAsync();
+                await createPasswordDialog.ShowAsync();
 
-                if (changePasswordDialog.Result == PasswordChangeResult.PassChangeOK)
+                if (createPasswordDialog.Result == PasswordCreationResult.PassCreateOK)
                 {
                     dialogNotCompleted = false; //breaking loop because password change completed
-                    if (onboarding == true)
-                    {
-                        onboarding = false; //if onboarding is active, turning it off
-                        DisplayLoginDialog(); //ask user for the password, for the first time
-                    }
+                
+                    DisplayLoginDialog(); //ask user for the password, for the first time
                 }
-                else if (changePasswordDialog.Result == PasswordChangeResult.PassChangeCancel && onboarding == false)
-                {
-                    dialogNotCompleted = false; //breaking loop to cancel change request
-                }
-                else if (changePasswordDialog.Result == PasswordChangeResult.PassChangeCancel && onboarding == true)
+                else if (createPasswordDialog.Result == PasswordCreationResult.PassCreateCancel)
                 {
                     CoreApplication.Exit(); //exiting application because onboarding process has been cancelled
                 }
             }
-            passchangeactive = false;
+        }
+
+        //function to complete the changing of the master password
+        private async void ChangePassword()
+        {
+            bool dialogNotCompleted = true;
+            //show the change password dialog...
+            PasswordChange changePasswordDialog = new PasswordChange();
+            while (dialogNotCompleted == true)
+            {
+                await changePasswordDialog.ShowAsync();
+
+                if (changePasswordDialog.Result == PasswordChangeResult.PassChangeOK) 
+                {
+                    dialogNotCompleted = false; //breaking loop because password change completed
+                }
+                else if (changePasswordDialog.Result == PasswordChangeResult.PassChangeCancel)
+                {
+                    dialogNotCompleted = false; //breaking loop because password change cancelled
+                }
+            }
         }
 
         //function to convert Hex codes to Solid brushes, for more precise colour options
@@ -481,7 +485,7 @@ namespace PassProtect
         private void MenuFlyoutItem_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
             //change master password
-            ChangeMasterPassword();
+            ChangePassword();
         }
 
         private async void ColorScheme_CheckForScheme()
@@ -556,16 +560,42 @@ namespace PassProtect
             ImportExportEngine.ExportDB(userpass);
         }
 
-        private void MenuFlyoutItem_Click_6(object sender, RoutedEventArgs e) 
+        private async void MenuFlyoutItem_Click_6(object sender, RoutedEventArgs e) 
         {
             //Reset button
+            ContentDialog deleteConfirmDialog = new ContentDialog
+            {
+                Title = "Are you sure you want to reset?",
+                Content = "You are about to completely reset PassProtect. \r\nThis will delete all information and restore PassProtect to being freshly installed. \r\n\nTHIS CANNOT BE REVERSED, so it is highly recommended to export the database before resetting. \r\n\nYou will be asked for your password to complete the reset.",
+                PrimaryButtonText = "Reset",
+                SecondaryButtonText = "Cancel"
+            };
+            ContentDialogResult result = await deleteConfirmDialog.ShowAsync();
 
-        }
+            if (result == ContentDialogResult.Primary)
+            {
+                //check for user password before running reset
+                bool notLoggedIn = true;
+                PasswordPrompt signInDialog = new PasswordPrompt();
+                while (notLoggedIn == true)
+                {
+                    await signInDialog.ShowAsync();
 
-        private void MenuFlyoutItem_Click_7(object sender, RoutedEventArgs e)
-        {
-            //DEVELOPER RESET BUTTON
-            resetProgram();
+                    if (signInDialog.Result == PasswordPromptResult.SignInOK)
+                    {
+                        //...sign in was successful
+                        notLoggedIn = false;
+
+                        //reset the program
+                        resetProgram();
+                    }
+                    else if (signInDialog.Result == PasswordPromptResult.SignInCancel)
+                    {
+                        //...sign in was cancelled by the user, do not reset the program
+                        notLoggedIn = false;
+                    }
+                }
+            }
         }
 
         private async void resetProgram()
@@ -587,7 +617,19 @@ namespace PassProtect
                 StorageFile deleteTarget = await localFolder.GetFileAsync("colorScheme");
                 await deleteTarget.DeleteAsync(); //delete the color
             }
-            await CoreApplication.RequestRestartAsync(""); //reboot the application
+
+            ContentDialog deleteCompleteDialog = new ContentDialog
+            {
+                Title = "Complete",
+                Content = "PassProtect has been reset and will now restart.",
+                PrimaryButtonText = "Okay"
+            };
+            ContentDialogResult result = await deleteCompleteDialog.ShowAsync();
+
+            if (result == ContentDialogResult.Primary)
+            {
+                await CoreApplication.RequestRestartAsync(""); //reboot the application
+            }
         }
 
         private void ColorScheme_Green()
