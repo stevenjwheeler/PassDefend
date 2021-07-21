@@ -11,6 +11,8 @@ using System.Linq;
 using Windows.ApplicationModel.DataTransfer;
 using System.Reflection;
 using Windows.UI.Xaml;
+using System.Text;
+using System.Security.Cryptography;
 
 namespace PassProtect
 {
@@ -629,6 +631,114 @@ namespace PassProtect
             if (result == ContentDialogResult.Primary)
             {
                 await CoreApplication.RequestRestartAsync(""); //reboot the application
+            }
+        }
+
+        //store the generated password when button is clicked
+        private void storeGeneratedButton_Click(object sender, RoutedEventArgs e)
+        {
+            passwordTextBox.Text = generateResultBox.Text;
+            passwordGeneratorFlyout.Hide();
+        }
+
+        //call the function to regenerate the generated password when the regenerate button is pressed
+        private void regenerateGeneratedButton_Click(object sender, RoutedEventArgs e)
+        {
+            regenerateGeneratedPass();
+        }
+
+        //call the function to generate a password when the generator form is opened
+        private void passwordGeneratorFlyout_Opened(object sender, object e)
+        {
+            regenerateGeneratedPass();
+        }
+
+        //function to generate passwords
+        private void regenerateGeneratedPass()
+        {
+            //set valid characters to 0
+            string validCharacters = "";
+
+            //list available characters
+            const string lowercases = "abcdefghijklmnopqrstuvwxyz";
+            const string uppercases = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            const string numbers = "0123456789";
+            const string symbols = "@!#%$*&^?";
+
+            //determine the valid characters from the selected options
+            if ((bool)generateLowercaseOption.IsChecked == true)
+            {
+                validCharacters = validCharacters + lowercases;
+            }
+
+            if ((bool)generateCapitalsOption.IsChecked == true)
+            {
+                validCharacters = validCharacters + uppercases;
+            }
+
+            if ((bool)generateNumbersOption.IsChecked == true)
+            {
+                validCharacters = validCharacters + numbers;
+            }
+
+            if ((bool)generateSymbolsOption.IsChecked == true)
+            {
+                validCharacters = validCharacters + symbols;
+            }
+
+            //generate the string
+            string generatedPass = "";
+            using (RNGCryptoServiceProvider provider = new RNGCryptoServiceProvider())
+            {
+                while (generatedPass.Length != generateLengthSlider.Value)
+                {
+                    {
+                        byte[] oneByte = new byte[1];
+                        provider.GetBytes(oneByte);
+                        char character = (char)oneByte[0];
+                        if (validCharacters.Contains(character))
+                        {
+                            generatedPass += character;
+                        }
+                    }
+                }
+
+                //send the generated string to the results box
+                generateResultBox.Text = generatedPass.ToString();
+            }
+
+        }
+
+        //regenerate password when option changed
+        private void generateCapitalsOption_Click(object sender, RoutedEventArgs e)
+        {
+            regenerateGeneratedPass();
+        }
+
+        //regenerate password when option changed
+        private void generateLowercaseOption_Click(object sender, RoutedEventArgs e)
+        {
+            regenerateGeneratedPass();
+        }
+
+        //regenerate password when option changed
+        private void generateNumbersOption_Click(object sender, RoutedEventArgs e)
+        {
+            regenerateGeneratedPass();
+        }
+
+        //regenerate password when option changed
+        private void generateSymbolsOption_Click(object sender, RoutedEventArgs e)
+        {
+            regenerateGeneratedPass();
+        }
+
+        //regenerate password when option changed
+        private void generateLengthSlider_ValueChanged(object sender, Windows.UI.Xaml.Controls.Primitives.RangeBaseValueChangedEventArgs e)
+        {
+            if (passwordGeneratorFlyout.IsOpen)
+            {
+                regenerateGeneratedPass();
             }
         }
 
