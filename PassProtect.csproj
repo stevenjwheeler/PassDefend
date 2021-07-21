@@ -243,7 +243,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Google.Apis.Drive.v3">
-      <Version>1.52.0.2370</Version>
+      <Version>1.52.0.2383</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.12</Version>

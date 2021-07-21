@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Windows.Storage;
 using System.Security.Cryptography;
 using Windows.UI.Xaml.Controls;
 
@@ -119,6 +120,102 @@ namespace PassProtect
                 }
             }
             return generatedPass;
+        }
+
+        public static async void saveSettings(CheckBox generateLowercaseOption, CheckBox generateCapitalsOption, CheckBox generateNumbersOption, CheckBox generateSymbolsOption, Slider generateLengthSlider)
+        {
+            //prep storage
+            StorageFolder localFolder = ApplicationData.Current.LocalFolder;
+            StorageFile genSettings = await localFolder.CreateFileAsync("genSettings", CreationCollisionOption.OpenIfExists);
+
+            //prepare to write the settings line to file for future use
+            /*string format: each digit either 1 or 0, 1 being on, 0 being off, except for length. Example:
+             * 1 0 1 0 16
+             * ^ ^ ^ ^ ^
+             * | | | | |
+             * | | | | length is 16
+             * | | | symbols are off
+             * | | numbers are on
+             * | lowercase is off
+             * uppercase is on
+            */
+            string settings = "";
+            //this allows the string to be written to file, then read back when the program is reopened to keep the users choices.
+
+            if ((bool)generateLowercaseOption.IsChecked == true)
+            {
+                settings += "1 ";
+            }
+            else
+            {
+                settings += "0 ";
+            }
+
+            if ((bool)generateCapitalsOption.IsChecked == true)
+            {
+                settings += "1 ";
+            }
+            else
+            {
+                settings += "0 ";
+            }
+
+            if ((bool)generateNumbersOption.IsChecked == true)
+            {
+                settings += "1 ";
+            }
+            else
+            {
+                settings += "0 ";
+            }
+
+            if ((bool)generateSymbolsOption.IsChecked == true)
+            {
+                settings += "1 ";
+            }
+            else
+            {
+                settings += "0 ";
+            }
+
+            settings += generateLengthSlider.Value;
+            
+            //save the generation settings for future sessions
+            await FileIO.WriteTextAsync(genSettings, settings);
+        }
+
+        public static async void loadSettings(CheckBox generateLowercaseOption, CheckBox generateCapitalsOption, CheckBox generateNumbersOption, CheckBox generateSymbolsOption, Slider generateLengthSlider)
+        {
+            //prep storage
+            StorageFolder localFolder = ApplicationData.Current.LocalFolder;
+
+            if (await localFolder.TryGetItemAsync("genSettings") != null) //if generator settings exist
+            {
+                //read file
+                StorageFile settingsfile = await localFolder.GetFileAsync("genSettings");
+                string fileContent = await FileIO.ReadTextAsync(settingsfile);
+
+                //read each number and act accordingly
+                //order: lowercase, capitals, numbers, symbols, length
+                string[] settingentries = fileContent.Split(' ');
+                if (settingentries[0] == "0")
+                {
+                    generateLowercaseOption.IsChecked = false;
+                }
+                if (settingentries[1] == "0")
+                {
+                    generateCapitalsOption.IsChecked = false;
+                }
+                if (settingentries[2] == "0")
+                {
+                    generateNumbersOption.IsChecked = false;
+                }
+                if (settingentries[3] == "0")
+                {
+                    generateSymbolsOption.IsChecked = false;
+                }
+                generateLengthSlider.Value = Double.Parse(settingentries[4]);
+            }
         }
     }
 }

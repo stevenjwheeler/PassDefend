@@ -85,6 +85,9 @@ namespace PassProtect
                     //first load of database accounts into account bar
                     RefreshAccounts();
 
+                    //then load the stored settings of the password generator, if applicable
+                    PassGenerator.loadSettings(generateLowercaseOption, generateCapitalsOption, generateNumbersOption, generateSymbolsOption, generateLengthSlider);
+
                     //hide the login rectangle to show the main ui
                     //note, the login rectangle is NOT a security feature, it is simply to make the login dialog look nice. The data behind remains encrypted and unloaded until the password is confirmed.
                     fadeLoginBackground.Begin(); //begin the fade animation
@@ -239,6 +242,12 @@ namespace PassProtect
                 StorageFile deleteTarget = await localFolder.GetFileAsync("colorScheme");
                 await deleteTarget.DeleteAsync(); //delete the color
             }
+            if (await localFolder.TryGetItemAsync("genSettings") != null) //if password generation settings exist
+            {
+                StorageFile deleteTarget = await localFolder.GetFileAsync("genSettings");
+                await deleteTarget.DeleteAsync(); //delete the settings
+            }
+
 
             ContentDialog deleteCompleteDialog = new ContentDialog
             {
@@ -607,6 +616,7 @@ namespace PassProtect
         private void storeGeneratedButton_Click(object sender, RoutedEventArgs e)
         {
             passwordTextBox.Text = generateResultBox.Text;
+            PassGenerator.saveSettings(generateLowercaseOption, generateCapitalsOption, generateNumbersOption, generateSymbolsOption, generateLengthSlider);
             passwordGeneratorFlyout.Hide();
         }
 
