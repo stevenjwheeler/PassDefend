@@ -1,8 +1,8 @@
 ﻿using System;
-using Windows.UI.Xaml.Controls;
-using System.Threading.Tasks;
 using System.Security.Cryptography;
+using System.Threading.Tasks;
 using Windows.Storage;
+using Windows.UI.Xaml.Controls;
 
 namespace PassProtect
 {
@@ -23,7 +23,7 @@ namespace PassProtect
         {
             //initialize the password prompt
             this.InitializeComponent();
-            this.Opened += PasswordPrompt_Opened; 
+            this.Opened += PasswordPrompt_Opened;
             //masterPasswordBox.GotFocus += new RoutedEventHandler(passwordBox_focused);
         }
 
@@ -97,7 +97,8 @@ namespace PassProtect
                 int approved = 1;
                 for (int i = 0; i < 20; i++)
                 {
-                    if (hashBytes[i+64] != hash[i]) {
+                    if (hashBytes[i + 64] != hash[i])
+                    {
                         approved = 0;
                     }
                 }

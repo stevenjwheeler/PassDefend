@@ -119,9 +119,9 @@
                                 <TextBox x:Name="generateResultBox" Text="password" Margin="0,0,0,10" MaxWidth="170" IsReadOnly="True"/>
                                 <MenuFlyoutSeparator/>
                                 <TextBlock Text="Length:"/>
-                                <Slider x:Name="generateLengthSlider" Minimum="1" Maximum="100" Value="16" ValueChanged="generateLengthSlider_ValueChanged"  />
+                                <Slider x:Name="generateLengthSlider" Minimum="4" Maximum="100" Value="16" ValueChanged="generateLengthSlider_ValueChanged"  />
                                 <MenuFlyoutSeparator/>
-                                <CheckBox x:Name="generateCapitalsOption" Content="Capitals (A-Z)" IsChecked="True" Click="generateCapitalsOption_Click"/>
+                                <CheckBox x:Name="generateCapitalsOption" Content="Uppercase (A-Z)" IsChecked="True" Click="generateCapitalsOption_Click"/>
                                 <CheckBox x:Name="generateLowercaseOption" Content="Lowercase (a-z)" IsChecked="True" Click="generateLowercaseOption_Click"/>
                                 <CheckBox x:Name="generateNumbersOption" Content="Numbers (0-9)" IsChecked="True" Click="generateNumbersOption_Click"/>
                                 <CheckBox x:Name="generateSymbolsOption" Content="Symbols" IsChecked="True" Click="generateSymbolsOption_Click"/>

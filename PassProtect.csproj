@@ -138,6 +138,7 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="BreachCheck.cs" />
+    <Compile Include="ColorSchemes.cs" />
     <Compile Include="DataAccess.cs" />
     <Compile Include="ExportDialog.xaml.cs">
       <DependentUpon>ExportDialog.xaml</DependentUpon>
@@ -149,6 +150,7 @@
     <Compile Include="OnboardingPage.xaml.cs">
       <DependentUpon>OnboardingPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="PassGenerator.cs" />
     <Compile Include="PasswordChange.xaml.cs">
       <DependentUpon>PasswordChange.xaml</DependentUpon>
     </Compile>

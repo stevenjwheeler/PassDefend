@@ -1,8 +1,8 @@
 ﻿using System;
-using Windows.UI.Xaml.Controls;
-using System.Threading.Tasks;
 using System.Security.Cryptography;
+using System.Threading.Tasks;
 using Windows.Storage;
+using Windows.UI.Xaml.Controls;
 
 namespace PassProtect
 {

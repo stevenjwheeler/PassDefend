@@ -1,8 +1,8 @@
 ﻿using System;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Web.Http;
-using System.Security.Cryptography;
 
 namespace PassProtect
 {
@@ -40,19 +40,23 @@ namespace PassProtect
             }
 
             Uri requestUri = new Uri("https://api.pwnedpasswords.com/range/" + sendableHash);
-            
+
             HttpResponseMessage httpResponse = new HttpResponseMessage();
             string httpResponseBody = "";
 
-            try {
+            try
+            {
                 httpResponse = await httpClient.GetAsync(requestUri);
                 httpResponse.EnsureSuccessStatusCode();
                 httpResponseBody = await httpResponse.Content.ReadAsStringAsync();
-            } catch (Exception ex) {
+            }
+            catch (Exception ex)
+            {
                 httpResponseBody = "Error: " + ex.HResult.ToString("X") + " Message: " + ex.Message;
             }
 
-            if (httpResponseBody.Contains(identifiableHash)) {
+            if (httpResponseBody.Contains(identifiableHash))
+            {
                 return true;
             }
             else
