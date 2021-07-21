@@ -1,8 +1,8 @@
 ﻿using System;
-using Windows.UI.Xaml.Controls;
-using System.Threading.Tasks;
 using System.Security.Cryptography;
+using System.Threading.Tasks;
 using Windows.Storage;
+using Windows.UI.Xaml.Controls;
 
 namespace PassProtect
 {
@@ -24,7 +24,20 @@ namespace PassProtect
             //initialize the password prompt
             this.InitializeComponent();
             this.Opened += PasswordPrompt_Opened;
+            //masterPasswordBox.GotFocus += new RoutedEventHandler(passwordBox_focused);
         }
+
+        //private void passwordBox_focused(object sender, RoutedEventArgs e)
+        //{
+        //    if (Window.Current.CoreWindow.GetKeyState(VirtualKey.CapitalLock) == CoreVirtualKeyStates.Down)
+        //    {
+        //        capsWarningText.Visibility = Visibility.Visible;
+        //    }
+        //    else
+        //    {
+        //        capsWarningText.Visibility = Visibility.Collapsed;
+        //    }
+        //}
 
         //upon submission...
         private async void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
@@ -84,7 +97,8 @@ namespace PassProtect
                 int approved = 1;
                 for (int i = 0; i < 20; i++)
                 {
-                    if (hashBytes[i+64] != hash[i]) {
+                    if (hashBytes[i + 64] != hash[i])
+                    {
                         approved = 0;
                     }
                 }

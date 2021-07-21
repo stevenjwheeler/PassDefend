@@ -12,22 +12,22 @@
     <AssemblyName>PassProtect</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
-    <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.18362.0</TargetPlatformVersion>
+    <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.19041.0</TargetPlatformVersion>
     <TargetPlatformMinVersion>10.0.16299.0</TargetPlatformMinVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WindowsXamlEnableOverview>true</WindowsXamlEnableOverview>
     <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
-    <PackageCertificateThumbprint>A14BC62125212238FE0D22F08D492ED393727EF3</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>0FD00D69AF0209FDC612EFF7FD6C9ECA48D117AB</PackageCertificateThumbprint>
     <PackageCertificateKeyFile />
     <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
     <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
     <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
-    <GenerateTestArtifacts>True</GenerateTestArtifacts>
+    <GenerateTestArtifacts>False</GenerateTestArtifacts>
     <AppxBundle>Always</AppxBundle>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
-    <AppxSymbolPackageEnabled>True</AppxSymbolPackageEnabled>
+    <AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -138,6 +138,7 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="BreachCheck.cs" />
+    <Compile Include="ColorSchemes.cs" />
     <Compile Include="DataAccess.cs" />
     <Compile Include="ExportDialog.xaml.cs">
       <DependentUpon>ExportDialog.xaml</DependentUpon>
@@ -145,6 +146,13 @@
     <Compile Include="ImportExportEngine.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="OnboardingPage.xaml.cs">
+      <DependentUpon>OnboardingPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PassGenerator.cs" />
+    <Compile Include="PasswordChange.xaml.cs">
+      <DependentUpon>PasswordChange.xaml</DependentUpon>
     </Compile>
     <Compile Include="PasswordCreation.xaml.cs">
       <DependentUpon>PasswordCreation.xaml</DependentUpon>
@@ -216,6 +224,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="OnboardingPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="PasswordChange.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="PasswordCreation.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -226,6 +242,9 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Google.Apis.Drive.v3">
+      <Version>1.52.0.2383</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.12</Version>
     </PackageReference>

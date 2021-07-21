@@ -1,15 +1,13 @@
-﻿using System;
-using SQLite;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
-using Windows.UI.ViewManagement;
-using Windows.UI;
-using Windows.ApplicationModel.Core;
-using Windows.Storage;
+﻿using SQLite;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using Windows.ApplicationModel.DataTransfer;
 using System.Reflection;
+using Windows.ApplicationModel.Core;
+using Windows.ApplicationModel.DataTransfer;
+using Windows.Storage;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 
 namespace PassProtect
 {
@@ -20,13 +18,10 @@ namespace PassProtect
 
         //prepare basic variables
         public static string userpass { get; set; }
-        public static bool passchangeactive = false;
         public bool newaccount = false;
         public int selectedID = 0;
+        public int activeWelcome = 0; //change to bool?? this is part of new onboarding so will be checked in future
         public static SQLiteConnection dbconnection { get; set; }
-
-        //this variable is to change the behaviour of the password change dialog when setting first password
-        public static bool onboarding { get; set; }
 
         //prepare storage for the accounts
         internal List<DataAccess.AccountList> AccountData { get; set; }
@@ -42,27 +37,14 @@ namespace PassProtect
             //stylize the window to match the colour scheme of the application
             ColorScheme_CheckForScheme();
 
-            //begin login process
-            LoginSequence();
+            //inform of page load completion
+            Loaded += Page_Loaded;
         }
 
-        //function to change the colour and formatting of the title bar to match the rest of the application
-        private void ModifyTitleBar(string colorValue)
+        //function that activates upon page load completion
+        private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            //set colour for title bar
-            var color = GetSolidColorBrush(colorValue).Color;
-            //customise the title bar
-            CoreApplicationViewTitleBar coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
-            coreTitleBar.ExtendViewIntoTitleBar = true;
-
-            //customise the exit, minimize and maximize buttons
-            ApplicationViewTitleBar titleBar = ApplicationView.GetForCurrentView().TitleBar;
-            titleBar.BackgroundColor = color;
-            titleBar.ButtonBackgroundColor = color;
-            titleBar.ForegroundColor = Colors.White;
-            titleBar.ButtonForegroundColor = Colors.White;
-            titleBar.ButtonInactiveBackgroundColor = color;
-            titleBar.ButtonInactiveForegroundColor = Colors.White;
+            LoginSequence();
         }
 
         //function to handle the login system
@@ -75,9 +57,8 @@ namespace PassProtect
             }
             else //if login file does not exist
             {
-                //prompt user to set password
-                onboarding = true;
-                ChangeMasterPassword();
+                /*Frame.Navigate(typeof(OnboardingPage)); //navigate to the new onboarding page */
+                CreatePassword(); //comment this line out if using the new onboarding page
             }
         }
 
@@ -103,6 +84,9 @@ namespace PassProtect
 
                     //first load of database accounts into account bar
                     RefreshAccounts();
+
+                    //then load the stored settings of the password generator, if applicable
+                    PassGenerator.loadSettings(generateLowercaseOption, generateCapitalsOption, generateNumbersOption, generateSymbolsOption, generateLengthSlider);
 
                     //hide the login rectangle to show the main ui
                     //note, the login rectangle is NOT a security feature, it is simply to make the login dialog look nice. The data behind remains encrypted and unloaded until the password is confirmed.
@@ -143,32 +127,52 @@ namespace PassProtect
         private async void CheckForBreaches()
         {
             timeSinceBreachText.Text = "Checking for password breaches...";
-            refreshBreachCheckButton.Content = "...";
-            foreach (var account in AccountData) 
+            foreach (var account in AccountData)
             { //for each account in account data...
                 bool passCheck = await BreachCheck.checkPassword(account.Password); //check the password against the API
                 if (passCheck == true) //if the password is found in the breach list...
                 {
                     ContentDialog deleteConfirmDialog = new ContentDialog
                     {
-                        Title = "Breached password identified",
-                        Content = "The password to your '" + account.Name + "' account appeared in an online breach, please change it.",
+                        Title = "WARNING! Breach detected on your " + account.Name + " account.",
+                        Content = "The password to your '" + account.Name + "' account appeared in an online breach as identified by HaveIBeenPwned. Please change the password on the service as soon as possible.",
                         PrimaryButtonText = "Okay"
                     };
                     ContentDialogResult result = await deleteConfirmDialog.ShowAsync();
                 }
             }
             timeSinceBreachText.Text = "Last password breach check: " + DateTime.Now;
-            refreshBreachCheckButton.Content = "Refresh";
+        }
+
+        //function to complete the creation of the master password
+        private async void CreatePassword()
+        {
+            bool dialogNotCompleted = true;
+            //show the change password dialog...
+            PasswordCreation createPasswordDialog = new PasswordCreation();
+            while (dialogNotCompleted == true)
+            {
+                await createPasswordDialog.ShowAsync();
+
+                if (createPasswordDialog.Result == PasswordCreationResult.PassCreateOK)
+                {
+                    dialogNotCompleted = false; //breaking loop because password change completed
+
+                    DisplayLoginDialog(); //ask user for the password, for the first time
+                }
+                else if (createPasswordDialog.Result == PasswordCreationResult.PassCreateCancel)
+                {
+                    CoreApplication.Exit(); //exiting application because onboarding process has been cancelled
+                }
+            }
         }
 
         //function to complete the changing of the master password
-        private async void ChangeMasterPassword()
+        private async void ChangePassword()
         {
-            passchangeactive = true;
             bool dialogNotCompleted = true;
             //show the change password dialog...
-            PasswordCreation changePasswordDialog = new PasswordCreation();
+            PasswordChange changePasswordDialog = new PasswordChange();
             while (dialogNotCompleted == true)
             {
                 await changePasswordDialog.ShowAsync();
@@ -176,35 +180,90 @@ namespace PassProtect
                 if (changePasswordDialog.Result == PasswordChangeResult.PassChangeOK)
                 {
                     dialogNotCompleted = false; //breaking loop because password change completed
-                    if (onboarding == true)
-                    {
-                        onboarding = false; //if onboarding is active, turning it off
-                        DisplayLoginDialog(); //ask user for the password, for the first time
-                    }
                 }
-                else if (changePasswordDialog.Result == PasswordChangeResult.PassChangeCancel && onboarding == false)
+                else if (changePasswordDialog.Result == PasswordChangeResult.PassChangeCancel)
                 {
-                    dialogNotCompleted = false; //breaking loop to cancel change request
-                }
-                else if (changePasswordDialog.Result == PasswordChangeResult.PassChangeCancel && onboarding == true)
-                {
-                    CoreApplication.Exit(); //exiting application because onboarding process has been cancelled
+                    dialogNotCompleted = false; //breaking loop because password change cancelled
                 }
             }
-            passchangeactive = false;
         }
 
-        //function to convert Hex codes to Solid brushes, for more precise colour options
-        public SolidColorBrush GetSolidColorBrush(string hex)
+        //function to check for saved color scheme
+        private async void ColorScheme_CheckForScheme()
         {
-            hex = hex.Replace("#", string.Empty);
-            byte a = (byte)(Convert.ToUInt32(hex.Substring(0, 2), 16));
-            byte r = (byte)(Convert.ToUInt32(hex.Substring(2, 2), 16));
-            byte g = (byte)(Convert.ToUInt32(hex.Substring(4, 2), 16));
-            byte b = (byte)(Convert.ToUInt32(hex.Substring(6, 2), 16));
-            SolidColorBrush myBrush = new SolidColorBrush(Windows.UI.Color.FromArgb(a, r, g, b));
-            return myBrush;
+            if (await localFolder.TryGetItemAsync("colorScheme") != null) //if colorscheme file exists
+            {
+                //set scheme
+                StorageFile colorschemefile = await localFolder.GetFileAsync("colorScheme");
+                string fileContent = await FileIO.ReadTextAsync(colorschemefile);
+                if (fileContent == "green")
+                {
+                    ColorSchemes.Green(AccountDetailWindow, AccountWindowSpacer, NoAccountWindow, OptionBar, StatusBar, SideBar, accountList, loginRectangle);
+                }
+                else if (fileContent == "red")
+                {
+                    ColorSchemes.Red(AccountDetailWindow, AccountWindowSpacer, NoAccountWindow, OptionBar, StatusBar, SideBar, accountList, loginRectangle);
+                }
+                else if (fileContent == "purple")
+                {
+                    ColorSchemes.Purple(AccountDetailWindow, AccountWindowSpacer, NoAccountWindow, OptionBar, StatusBar, SideBar, accountList, loginRectangle);
+                }
+                else if (fileContent == "black")
+                {
+                    ColorSchemes.Black(AccountDetailWindow, AccountWindowSpacer, NoAccountWindow, OptionBar, StatusBar, SideBar, accountList, loginRectangle);
+                }
+                else
+                {
+                    ColorSchemes.Green(AccountDetailWindow, AccountWindowSpacer, NoAccountWindow, OptionBar, StatusBar, SideBar, accountList, loginRectangle);
+                }
+            }
+            else //if colorscheme file does not exist
+            {
+                ColorSchemes.Green(AccountDetailWindow, AccountWindowSpacer, NoAccountWindow, OptionBar, StatusBar, SideBar, accountList, loginRectangle);
+            }
         }
+
+        private async void resetProgram()
+        {
+            //The resetProgram function deletes all user data and returns the program back to the freshly installed state
+            if (await localFolder.TryGetItemAsync("hash") != null) //if login file exists
+            {
+                StorageFile deleteTarget = await localFolder.GetFileAsync("hash");
+                await deleteTarget.DeleteAsync(); //delete the hash
+            }
+            if (await localFolder.TryGetItemAsync("core") != null) //if core exists
+            {
+                DataAccess.CloseDB(dbconnection); //close core
+                StorageFile deleteTarget = await localFolder.GetFileAsync("core");
+                await deleteTarget.DeleteAsync(); //delete the core
+            }
+            if (await localFolder.TryGetItemAsync("colorScheme") != null) //if color personalisation exists
+            {
+                StorageFile deleteTarget = await localFolder.GetFileAsync("colorScheme");
+                await deleteTarget.DeleteAsync(); //delete the color
+            }
+            if (await localFolder.TryGetItemAsync("genSettings") != null) //if password generation settings exist
+            {
+                StorageFile deleteTarget = await localFolder.GetFileAsync("genSettings");
+                await deleteTarget.DeleteAsync(); //delete the settings
+            }
+
+
+            ContentDialog deleteCompleteDialog = new ContentDialog
+            {
+                Title = "Reset complete",
+                Content = "PassProtect has been reset and will now restart.",
+                PrimaryButtonText = "Okay"
+            };
+            ContentDialogResult result = await deleteCompleteDialog.ShowAsync();
+
+            if (result == ContentDialogResult.Primary)
+            {
+                await CoreApplication.RequestRestartAsync(""); //reboot the application
+            }
+        }
+
+        /* --- EVERYTHING PAST THIS LINE IS EVENT FUNCTIONS --- */
 
         //function to take searchbox content and filter out the account list
         private void SearchBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -447,7 +506,7 @@ namespace PassProtect
             ContentDialog deleteConfirmDialog = new ContentDialog
             {
                 Title = "Are you sure?",
-                Content = "You are about to delete an account. \r\nThis cannot be undone!",
+                Content = "You are about to delete this account. \r\nThis cannot be undone!",
                 PrimaryButtonText = "Delete",
                 SecondaryButtonText = "Cancel"
             };
@@ -472,47 +531,14 @@ namespace PassProtect
         private void MenuFlyoutItem_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
             //change master password
-            ChangeMasterPassword();
+            ChangePassword();
         }
 
-        private async void ColorScheme_CheckForScheme()
-        {
-            if (await localFolder.TryGetItemAsync("colorScheme") != null) //if colorscheme file exists
-            {
-                //set scheme
-                StorageFile colorschemefile = await localFolder.GetFileAsync("colorScheme");
-                string fileContent = await FileIO.ReadTextAsync(colorschemefile);
-                if (fileContent == "green")
-                {
-                    ColorScheme_Green();
-                }
-                else if (fileContent == "red")
-                {
-                    ColorScheme_Red();
-                }
-                else if (fileContent == "purple")
-                {
-                    ColorScheme_Purple();
-                }
-                else if (fileContent == "black")
-                {
-                    ColorScheme_Black();
-                }
-                else
-                {
-                    ColorScheme_Green();
-                }
-            }
-            else //if colorscheme file does not exist
-            {
-                ColorScheme_Green();
-            }
-        }
-
+        //the following functions change the color scheme when selected in the menu
         private async void MenuFlyoutItem_Click_1(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
             //change colour green
-            ColorScheme_Green();
+            ColorSchemes.Green(AccountDetailWindow, AccountWindowSpacer, NoAccountWindow, OptionBar, StatusBar, SideBar, accountList, loginRectangle);
             StorageFile colorschemefile = await localFolder.CreateFileAsync("colorScheme", CreationCollisionOption.OpenIfExists);
             await FileIO.WriteTextAsync(colorschemefile, "green");
         }
@@ -520,7 +546,7 @@ namespace PassProtect
         private async void MenuFlyoutItem_Click_2(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
             //change colour red
-            ColorScheme_Red();
+            ColorSchemes.Red(AccountDetailWindow, AccountWindowSpacer, NoAccountWindow, OptionBar, StatusBar, SideBar, accountList, loginRectangle);
             StorageFile colorschemefile = await localFolder.CreateFileAsync("colorScheme", CreationCollisionOption.OpenIfExists);
             await FileIO.WriteTextAsync(colorschemefile, "red");
         }
@@ -528,7 +554,7 @@ namespace PassProtect
         private async void MenuFlyoutItem_Click_3(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
             //change colour purple
-            ColorScheme_Purple();
+            ColorSchemes.Purple(AccountDetailWindow, AccountWindowSpacer, NoAccountWindow, OptionBar, StatusBar, SideBar, accountList, loginRectangle);
             StorageFile colorschemefile = await localFolder.CreateFileAsync("colorScheme", CreationCollisionOption.OpenIfExists);
             await FileIO.WriteTextAsync(colorschemefile, "purple");
         }
@@ -536,64 +562,107 @@ namespace PassProtect
         private async void MenuFlyoutItem_Click_4(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
             //change colour black
-            ColorScheme_Black();
+            ColorSchemes.Black(AccountDetailWindow, AccountWindowSpacer, NoAccountWindow, OptionBar, StatusBar, SideBar, accountList, loginRectangle);
             StorageFile colorschemefile = await localFolder.CreateFileAsync("colorScheme", CreationCollisionOption.OpenIfExists);
             await FileIO.WriteTextAsync(colorschemefile, "black");
         }
-
-        private void ColorScheme_Green()
-        {
-            AccountDetailWindow.Background = GetSolidColorBrush("FF165D43");
-            AccountWindowSpacer.Background = GetSolidColorBrush("FF165D43");
-            NoAccountWindow.Background = GetSolidColorBrush("FF165D43");
-            OptionBar.Background = GetSolidColorBrush("FF20805C");
-            StatusBar.Background = GetSolidColorBrush("FF26956C");
-            SideBar.Background = GetSolidColorBrush("FF26956C");
-            accountList.Background = GetSolidColorBrush("FF739E8E");
-            loginRectangle.Fill = GetSolidColorBrush("FF165D43");
-            ModifyTitleBar("FF165D43");
-        }
-        private void ColorScheme_Red()
-        {
-            AccountDetailWindow.Background = GetSolidColorBrush("FF5D1616");
-            AccountWindowSpacer.Background = GetSolidColorBrush("FF5D1616");
-            NoAccountWindow.Background = GetSolidColorBrush("FF5D1616");
-            OptionBar.Background = GetSolidColorBrush("FF802020");
-            StatusBar.Background = GetSolidColorBrush("FF952626");
-            SideBar.Background = GetSolidColorBrush("FF952626");
-            accountList.Background = GetSolidColorBrush("FF9E7373");
-            loginRectangle.Fill = GetSolidColorBrush("FF5D1616");
-            ModifyTitleBar("FF5D1616");
-        }
-        private void ColorScheme_Purple()
-        {
-            AccountDetailWindow.Background = GetSolidColorBrush("FF40165D");
-            AccountWindowSpacer.Background = GetSolidColorBrush("FF40165D");
-            NoAccountWindow.Background = GetSolidColorBrush("FF40165D");
-            OptionBar.Background = GetSolidColorBrush("FF4C2080");
-            StatusBar.Background = GetSolidColorBrush("FF6D2695");
-            SideBar.Background = GetSolidColorBrush("FF6D2695");
-            accountList.Background = GetSolidColorBrush("FF81739E");
-            loginRectangle.Fill = GetSolidColorBrush("FF40165D");
-            ModifyTitleBar("FF40165D");
-        }
-        private void ColorScheme_Black()
-        {
-            AccountDetailWindow.Background = GetSolidColorBrush("FF1B1B1B");
-            AccountWindowSpacer.Background = GetSolidColorBrush("FF1B1B1B");
-            NoAccountWindow.Background = GetSolidColorBrush("FF1B1B1B");
-            OptionBar.Background = GetSolidColorBrush("FF171717");
-            StatusBar.Background = GetSolidColorBrush("FF0F0F0F");
-            SideBar.Background = GetSolidColorBrush("FF0F0F0F");
-            accountList.Background = GetSolidColorBrush("FF2E2E2E");
-            loginRectangle.Fill = GetSolidColorBrush("FF1B1B1B");
-            ModifyTitleBar("FF1B1B1B");
-        }
+        //end of color scheme changes
 
         private void MenuFlyoutItem_Click_5(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
             //Export database button
             ImportExportEngine.ExportDB(userpass);
+        }
+
+        private async void MenuFlyoutItem_Click_6(object sender, RoutedEventArgs e)
+        {
+            //Reset button
+            ContentDialog deleteConfirmDialog = new ContentDialog
+            {
+                Title = "Are you sure you want to reset?",
+                Content = "You are about to completely reset PassProtect. \r\nThis will delete all information and restore PassProtect to being freshly installed. \r\n\nTHIS CANNOT BE REVERSED, so it is highly recommended to export the database before resetting. \r\n\nYou will be asked for your password to complete the reset.",
+                PrimaryButtonText = "Reset",
+                SecondaryButtonText = "Cancel"
+            };
+            ContentDialogResult result = await deleteConfirmDialog.ShowAsync();
+
+            if (result == ContentDialogResult.Primary)
+            {
+                //check for user password before running reset
+                bool notLoggedIn = true;
+                PasswordPrompt signInDialog = new PasswordPrompt();
+                while (notLoggedIn == true)
+                {
+                    await signInDialog.ShowAsync();
+
+                    if (signInDialog.Result == PasswordPromptResult.SignInOK)
+                    {
+                        //...sign in was successful
+                        notLoggedIn = false;
+
+                        //reset the program
+                        resetProgram();
+                    }
+                    else if (signInDialog.Result == PasswordPromptResult.SignInCancel)
+                    {
+                        //...sign in was cancelled by the user, do not reset the program
+                        notLoggedIn = false;
+                    }
+                }
+            }
+        }
+
+        //store the generated password when button is clicked
+        private void storeGeneratedButton_Click(object sender, RoutedEventArgs e)
+        {
+            passwordTextBox.Text = generateResultBox.Text;
+            PassGenerator.saveSettings(generateLowercaseOption, generateCapitalsOption, generateNumbersOption, generateSymbolsOption, generateLengthSlider);
+            passwordGeneratorFlyout.Hide();
+        }
+
+        //call the function to regenerate the generated password when the regenerate button is pressed
+        private void regenerateGeneratedButton_Click(object sender, RoutedEventArgs e)
+        {
+            PassGenerator.regenerateGeneratedPass(regenerateGeneratedButton, storeGeneratedButton, generateLowercaseOption, generateCapitalsOption, generateNumbersOption, generateSymbolsOption, generateLengthSlider, generateResultBox);
+        }
+
+        //call the function to generate a password when the generator form is opened
+        private void passwordGeneratorFlyout_Opened(object sender, object e)
+        {
+            PassGenerator.regenerateGeneratedPass(regenerateGeneratedButton, storeGeneratedButton, generateLowercaseOption, generateCapitalsOption, generateNumbersOption, generateSymbolsOption, generateLengthSlider, generateResultBox);
+        }
+
+        //regenerate password when option changed
+        private void generateCapitalsOption_Click(object sender, RoutedEventArgs e)
+        {
+            PassGenerator.regenerateGeneratedPass(regenerateGeneratedButton, storeGeneratedButton, generateLowercaseOption, generateCapitalsOption, generateNumbersOption, generateSymbolsOption, generateLengthSlider, generateResultBox);
+        }
+
+        //regenerate password when option changed
+        private void generateLowercaseOption_Click(object sender, RoutedEventArgs e)
+        {
+            PassGenerator.regenerateGeneratedPass(regenerateGeneratedButton, storeGeneratedButton, generateLowercaseOption, generateCapitalsOption, generateNumbersOption, generateSymbolsOption, generateLengthSlider, generateResultBox);
+        }
+
+        //regenerate password when option changed
+        private void generateNumbersOption_Click(object sender, RoutedEventArgs e)
+        {
+            PassGenerator.regenerateGeneratedPass(regenerateGeneratedButton, storeGeneratedButton, generateLowercaseOption, generateCapitalsOption, generateNumbersOption, generateSymbolsOption, generateLengthSlider, generateResultBox);
+        }
+
+        //regenerate password when option changed
+        private void generateSymbolsOption_Click(object sender, RoutedEventArgs e)
+        {
+            PassGenerator.regenerateGeneratedPass(regenerateGeneratedButton, storeGeneratedButton, generateLowercaseOption, generateCapitalsOption, generateNumbersOption, generateSymbolsOption, generateLengthSlider, generateResultBox);
+        }
+
+        //regenerate password when option changed
+        private void generateLengthSlider_ValueChanged(object sender, Windows.UI.Xaml.Controls.Primitives.RangeBaseValueChangedEventArgs e)
+        {
+            if (passwordGeneratorFlyout.IsOpen)
+            {
+                PassGenerator.regenerateGeneratedPass(regenerateGeneratedButton, storeGeneratedButton, generateLowercaseOption, generateCapitalsOption, generateNumbersOption, generateSymbolsOption, generateLengthSlider, generateResultBox);
+            }
         }
     }
 }

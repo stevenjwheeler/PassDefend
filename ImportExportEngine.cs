@@ -1,12 +1,6 @@
 ﻿using System;
-using Windows.Storage;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
+using Windows.Storage;
 
 namespace PassProtect
 {

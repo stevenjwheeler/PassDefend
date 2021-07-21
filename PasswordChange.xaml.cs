@@ -6,47 +6,57 @@ using Windows.UI.Xaml.Controls;
 
 namespace PassProtect
 {
-    public enum PasswordCreationResult
+    public enum PasswordChangeResult
     {
-        PassCreateOK,
-        PassCreateFail,
-        PassCreateCancel,
+        PassChangeOK,
+        PassChangeFail,
+        PassChangeCancel,
         Nothing
     }
 
-    public sealed partial class PasswordCreation : ContentDialog
+    public sealed partial class PasswordChange : ContentDialog
     {
-        public PasswordCreationResult Result { get; private set; }
+        public PasswordChangeResult Result { get; private set; }
+        private string prevpass;
         public StorageFolder localFolder = ApplicationData.Current.LocalFolder;
 
-        public PasswordCreation()
+        public PasswordChange()
         {
             this.InitializeComponent();
-            this.Opened += PasswordCreation_Opened;
+            this.Opened += PasswordChange_Opened;
+            prevpass = MainPage.userpass;
         }
 
         private async void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
-            //if both boxes are not filled or do not match
-            if (string.IsNullOrEmpty(changePasswordBoxMain.Password) || string.IsNullOrEmpty(changePasswordBoxConfirm.Password) || (changePasswordBoxMain.Password != changePasswordBoxConfirm.Password))
+            //if both boxes are not filled, do not match, or old pass doesnt match
+            if (changePasswordBoxOld.Password != prevpass)
             {
-                //reject password change
+                //reject password change due to incorrect old pass
+                this.noMatchText.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+                this.noOldMatchText.Visibility = Windows.UI.Xaml.Visibility.Visible;
                 args.Cancel = true;
+            }
+            else if (string.IsNullOrEmpty(changePasswordBoxMain.Password) || string.IsNullOrEmpty(changePasswordBoxConfirm.Password) || (changePasswordBoxMain.Password != changePasswordBoxConfirm.Password))
+            {
+                //reject password change due to new pass mismatch
+                this.noOldMatchText.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
                 this.noMatchText.Visibility = Windows.UI.Xaml.Visibility.Visible;
+                args.Cancel = true;
             }
             else
             {
                 ContentDialogButtonClickDeferral deferral = args.GetDeferral();
                 if (await AsyncPasswordStore())
                 {
-                    //if password store confirmed, send ok declaration
-                    MainPage.userpass = changePasswordBoxMain.Password;
-                    this.Result = PasswordCreationResult.PassCreateOK;
+                    //store password
+                    DataAccess.changeDBPassword(MainPage.dbconnection, changePasswordBoxMain.Password);
+                    this.Result = PasswordChangeResult.PassChangeOK;
                 }
                 else
                 {
                     //if password store failed, send fail declaration
-                    this.Result = PasswordCreationResult.PassCreateFail;
+                    this.Result = PasswordChangeResult.PassChangeFail;
                 }
                 deferral.Complete();
             }
@@ -54,13 +64,13 @@ namespace PassProtect
 
         private void ContentDialog_CloseButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
-            this.Result = PasswordCreationResult.PassCreateCancel;
+            this.Result = PasswordChangeResult.PassChangeCancel;
         }
 
         //set declaration to 'nothing' when dialog opens
-        void PasswordCreation_Opened(ContentDialog sender, ContentDialogOpenedEventArgs args)
+        void PasswordChange_Opened(ContentDialog sender, ContentDialogOpenedEventArgs args)
         {
-            this.Result = PasswordCreationResult.Nothing;
+            this.Result = PasswordChangeResult.Nothing;
         }
 
         private async Task<bool> AsyncPasswordStore()
