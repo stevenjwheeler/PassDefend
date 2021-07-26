@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Security.Principal;
+using Windows.ApplicationModel;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
@@ -39,6 +41,9 @@ namespace PassProtect
 
             //inform of page load completion
             Loaded += Page_Loaded;
+            
+            //set the user facing version information
+            versionInfo.Text = "PassProtect v" + GetAppVersion();
         }
 
         //function that activates upon page load completion
@@ -57,7 +62,7 @@ namespace PassProtect
             }
             else //if login file does not exist
             {
-                /*Frame.Navigate(typeof(OnboardingPage)); //navigate to the new onboarding page */
+                //Frame.Navigate(typeof(OnboardingPage)); //navigate to the new onboarding page
                 CreatePassword(); //comment this line out if using the new onboarding page
             }
         }
@@ -261,6 +266,16 @@ namespace PassProtect
             {
                 await CoreApplication.RequestRestartAsync(""); //reboot the application
             }
+        }
+
+        //function to get application version
+        public static string GetAppVersion()
+        {
+            Package package = Package.Current;
+            PackageId packageId = package.Id;
+            PackageVersion version = packageId.Version;
+
+            return string.Format("{0}.{1}.{2}", version.Major, version.Minor, version.Build);
         }
 
         /* --- EVERYTHING PAST THIS LINE IS EVENT FUNCTIONS --- */
@@ -663,6 +678,18 @@ namespace PassProtect
             {
                 PassGenerator.regenerateGeneratedPass(regenerateGeneratedButton, storeGeneratedButton, generateLowercaseOption, generateCapitalsOption, generateNumbersOption, generateSymbolsOption, generateLengthSlider, generateResultBox);
             }
+        }
+
+        //open version info dialog
+        private async void versionInfo_Click(object sender, RoutedEventArgs e)
+        {
+            ContentDialog versionInfoDialog = new ContentDialog
+            {
+                Title = "PassProtect (Windows UWP) v" + GetAppVersion(),
+                Content = "You are running PassProtect (Windows UWP) version " + GetAppVersion() + ".\r\nwww.stevenwheeler.co.uk/passprotect\r\n\r\nPassProtect uses the HaveIBeenPwned Passwords API, licenced under a Creative Commons Attribution 4.0 International License, to provide password breach checking.\r\n\r\nPassword breach checking is secured by not transmitting the whole password and encoding the characters before transmission with SHA-1. All transmission is performed over HTTPS, and the API responds with many false results so that the real inputted password cannot be determined by an onlooker.\r\n\r\nMade in the UK.\r\nThank you for using PassProtect! ❤️",
+                PrimaryButtonText = "Okay"
+            };
+            ContentDialogResult result = await versionInfoDialog.ShowAsync();
         }
     }
 }

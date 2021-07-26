@@ -43,8 +43,8 @@ namespace PassProtect
             AccountDetailWindow.Background = GetSolidColorBrush("FF165D43");
             AccountWindowSpacer.Background = GetSolidColorBrush("FF165D43");
             NoAccountWindow.Background = GetSolidColorBrush("FF165D43");
-            OptionBar.Background = GetSolidColorBrush("FF20805C");
-            StatusBar.Background = GetSolidColorBrush("FF26956C");
+            OptionBar.Background = GetSolidColorBrush("FF19664A");
+            StatusBar.Background = GetSolidColorBrush("FF1E7957");
             SideBar.Background = GetSolidColorBrush("FF26956C");
             accountList.Background = GetSolidColorBrush("FF739E8E");
             loginRectangle.Fill = GetSolidColorBrush("FF165D43");

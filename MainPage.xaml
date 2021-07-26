@@ -5,7 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    Background="#FF165D43">
 
     <Grid x:Name="MainWindowGrid">
         <!--TITLE BAR-->
@@ -17,7 +17,66 @@
         <!--END OF TITLE BAR-->
 
         <!--APP CONTENT-->
-        <Grid x:Name="SideBar" Background="#FF26956C" MinWidth="266" HorizontalAlignment="Left" Width="266" Grid.RowSpan="2">
+        <Grid x:Name="NoAccountWindow" Background="#FF165D43" FocusVisualPrimaryBrush="#FF165D43" Margin="266,0,0,87" Grid.RowSpan="2">
+            <TextBlock x:Name="selectAccountText" Foreground="White" FontSize="25" Text="Select an account to begin&#xA;or press the + button to add an account" TextAlignment="Center" HorizontalAlignment="Center" Width="443" Height="67" VerticalAlignment="Center"/>
+        </Grid>
+        <ScrollViewer x:Name="AccountDetailScroller" Margin="266,0,0,87" Grid.RowSpan="2" VerticalScrollMode="Auto" HorizontalScrollMode="Enabled">
+            <Grid x:Name="AccountDetailWindow" Background="#FF165D43" FocusVisualPrimaryBrush="White" Height="545">
+                <TextBox x:Name="accountNameTextBox" Margin="48,134,0,0" Text="" VerticalAlignment="Top" PlaceholderText="Enter account name" TextChanged="accountNameTextbox_TextChanged" Background="#66FFFFFF" HorizontalAlignment="Left" Width="422"/>
+                <TextBlock x:Name="accountNameText" Margin="48,110,0,0" Text="Account name:" TextWrapping="Wrap" VerticalAlignment="Top" HorizontalAlignment="Left" Width="100"/>
+                <TextBlock x:Name="usernameText" HorizontalAlignment="Left" Margin="48,198,0,0" Text="Username:" TextWrapping="Wrap" VerticalAlignment="Top" Width="82"/>
+                <TextBox x:Name="usernameTextBox" Margin="48,222,0,0" Text=""  VerticalAlignment="Top" HorizontalAlignment="Left" Width="422" PlaceholderText="Enter username" TextChanged="usernameTextBox_TextChanged" Background="#66FFFFFF"/>
+                <TextBlock x:Name="emailText" HorizontalAlignment="Left" Margin="48,293,0,0" Text="Email:" TextWrapping="Wrap" VerticalAlignment="Top" Width="45"/>
+                <TextBox x:Name="emailTextBox" Margin="48,317,0,0" Text="" VerticalAlignment="Top" HorizontalAlignment="Left" Width="422" PlaceholderText="Enter email" TextChanged="emailTextBox_TextChanged" Background="#66FFFFFF"/>
+                <TextBlock x:Name="passwordText" HorizontalAlignment="Left" Margin="48,388,0,0" Text="Password:" VerticalAlignment="Top" Width="77"/>
+                <TextBox x:Name="passwordTextBox" Margin="48,412,0,0" Text="" VerticalAlignment="Top" HorizontalAlignment="Left" Width="422" PlaceholderText="Enter password or generate below" TextChanged="passwordTextBox_TextChanged" Background="#66FFFFFF"/>
+                <TextBlock x:Name="accountNameHeader" Foreground="White" FontSize="25" Text="New account" FontWeight="Normal" FontStyle="Normal" Margin="48,44,0,0" HorizontalAlignment="Left" Width="886" Height="45" VerticalAlignment="Top"/>
+                <Button x:Name="copyPasswordButton" ToolTipService.ToolTip="Copy password to clipboard" FontFamily="Segoe MDL2 Assets" Content="&#xE8C8;" Margin="435,449,0,0" VerticalAlignment="Top" Width="35" Click="copyPasswordButton_Click" Height="32" FontSize="16"/>
+                <Button x:Name="copyUsernameButton" ToolTipService.ToolTip="Copy username to clipboard" FontFamily="Segoe MDL2 Assets" Content="&#xE8C8;" Margin="435,259,0,0" VerticalAlignment="Top" Width="35" Click="copyUsernameButton_Click" Height="32" FontSize="16"/>
+                <Button x:Name="copyEmailButton" ToolTipService.ToolTip="Copy email to clipboard" FontFamily="Segoe MDL2 Assets" Content="&#xE8C8;" Margin="435,354,0,0" VerticalAlignment="Top" Width="35" Click="copyEmailButton_Click" Height="32" FontSize="16"/>
+                <Grid x:Name="AccountWindowSpacer" Background="#FF165D43" FocusVisualPrimaryBrush="#FF165D43" Height="30" VerticalAlignment="Top" Margin="3,486,0,0" d:IsLocked="True"/>
+                <Button x:Name="generatePasswordButton" Content="Generate password" Margin="48,449,0,0" VerticalAlignment="Top" Width="150" Click="copyPasswordButton_Click">
+                    <Button.Flyout>
+                        <Flyout x:Name="passwordGeneratorFlyout" Placement="Bottom" Opened="passwordGeneratorFlyout_Opened">
+                            <Flyout.FlyoutPresenterStyle>
+                                <Style TargetType="FlyoutPresenter">
+                                    <Setter Property="MinWidth" Value="200"/>
+                                </Style>
+                            </Flyout.FlyoutPresenterStyle>
+                            <StackPanel>
+                                <TextBox x:Name="generateResultBox" Text="password" Margin="0,0,0,10" MaxWidth="170" IsReadOnly="True"/>
+                                <MenuFlyoutSeparator/>
+                                <TextBlock Text="Length:"/>
+                                <Slider x:Name="generateLengthSlider" Minimum="4" Maximum="100" Value="16" ValueChanged="generateLengthSlider_ValueChanged"  />
+                                <MenuFlyoutSeparator/>
+                                <CheckBox x:Name="generateCapitalsOption" Content="Uppercase (A-Z)" IsChecked="True" Click="generateCapitalsOption_Click"/>
+                                <CheckBox x:Name="generateLowercaseOption" Content="Lowercase (a-z)" IsChecked="True" Click="generateLowercaseOption_Click"/>
+                                <CheckBox x:Name="generateNumbersOption" Content="Numbers (0-9)" IsChecked="True" Click="generateNumbersOption_Click"/>
+                                <CheckBox x:Name="generateSymbolsOption" Content="Symbols" IsChecked="True" Click="generateSymbolsOption_Click"/>
+                                <MenuFlyoutSeparator/>
+                                <Button x:Name="regenerateGeneratedButton" Content="Regenerate password" HorizontalAlignment="Stretch" Margin="0,10,0,10" Click="regenerateGeneratedButton_Click"/>
+                                <Button x:Name="storeGeneratedButton" Content="Use password" HorizontalAlignment="Stretch" Click="storeGeneratedButton_Click"/>
+                            </StackPanel>
+                        </Flyout>
+                    </Button.Flyout>
+                </Button>
+                <TextBox x:Name="notesTextBox" Margin="509,134,58,0" Text="" TextWrapping="Wrap" Height="347" VerticalAlignment="Top" AcceptsReturn="True" PlaceholderText="Enter notes" TextChanged="notesTextBox_TextChanged" Background="#66FFFFFF"/>
+                <TextBlock x:Name="notesText" HorizontalAlignment="Left" Margin="509,110,0,0" Text="Notes:" TextWrapping="Wrap" VerticalAlignment="Top" Height="22"/>
+            </Grid>
+        </ScrollViewer>
+        <Grid x:Name="StatusBar" Background="#FF1E7957" Margin="255,0,0,0" Height="27" VerticalAlignment="Bottom" Grid.Row="1">
+            <TextBlock x:Name="timeSinceBreachText" HorizontalAlignment="Left" Margin="20,0,0,0" Text="Last password breach check:" TextWrapping="Wrap" VerticalAlignment="Center" FocusVisualPrimaryBrush="Black" Foreground="#FFAAAAAA" Height="23"/>
+            <Button x:Name="refreshBreachCheckButton" ToolTipService.ToolTip="Refresh breach check" FontFamily="Segoe MDL2 Assets" Content="&#xE72C;" Height="27" Margin="334,0,0,0" Width="30" FontSize="10" Click="refreshBreachCheckButton_Click"/>
+            <TextBlock x:Name="breachProviderText" TextWrapping="Wrap" TextAlignment="Right" VerticalAlignment="Center" FocusVisualPrimaryBrush="Black" Foreground="#FFB6B6B6" Height="23" Margin="0,0,5,0" HorizontalAlignment="Right" Width="298"><Run Text="Breach checking provided by HaveIBeenPwned"/><LineBreak/><Run/></TextBlock>
+        </Grid>
+        <Grid x:Name="OptionBar" Background="#FF19664A" Margin="266,0,0,27" Height="60" VerticalAlignment="Bottom" Grid.Row="1">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Width="191">
+                <Button x:Name="deleteEntryButton" ToolTipService.ToolTip="Delete account" FontFamily="Segoe MDL2 Assets" Content="&#xE74D;" Height="47" IsEnabled="False" Width="50" Click="deleteEntryButton_Click" Margin="10,-2,0,0" FontSize="24"/>
+                <Button x:Name="revertButton" ToolTipService.ToolTip="Revert changes" FontFamily="Segoe MDL2 Assets" Content="&#xE750;" Height="47" Width="50" IsEnabled="False" Click="revertButton_Click" Margin="10,-2,0,0" FontSize="24"/>
+                <Button x:Name="saveButton" ToolTipService.ToolTip="Save account" FontFamily="Segoe MDL2 Assets" Content="&#xE74E;" Height="47" IsEnabled="False" Width="50" Click="saveButton_Click" Margin="10,-2,0,0" FontSize="24"/>
+            </StackPanel>
+        </Grid>
+        <Grid x:Name="SideBar" Background="#FF26956C" MinWidth="266" HorizontalAlignment="Left" Width="266" Grid.RowSpan="2" CornerRadius="0,12,12,0">
             <StackPanel x:Name="sideBarSearch" Margin="11,11,0,11" HorizontalAlignment="Left" Width="242">
                 <!--rendering title-->
                 <TextBlock Foreground="White" FontSize="25" HorizontalAlignment="Center" Text="PassProtect" FontWeight="Normal" FontStyle="Normal" Height="45"/>
@@ -85,68 +144,15 @@
                                 <FontIcon Glyph="&#xE72E;" />
                             </MenuFlyoutItem.Icon>
                         </MenuFlyoutItem>
+                        <MenuFlyoutSeparator />
+                        <MenuFlyoutItem x:Name="versionInfo" Text="PassProtect v" Click="versionInfo_Click">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xE946;" />
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
                     </MenuFlyout>
                 </Button.Flyout>
             </Button>
-        </Grid>
-        <Grid x:Name="NoAccountWindow" Background="#FF165D43" FocusVisualPrimaryBrush="#FF165D43" Margin="266,0,0,87" Grid.RowSpan="2">
-            <TextBlock x:Name="selectAccountText" Foreground="White" FontSize="25" Text="Select an account to begin&#xA;or press the + button to add an account" TextAlignment="Center" HorizontalAlignment="Center" Width="443" Height="67" VerticalAlignment="Center"/>
-        </Grid>
-        <ScrollViewer x:Name="AccountDetailScroller" Margin="266,0,0,87" Grid.RowSpan="2" VerticalScrollMode="Auto" HorizontalScrollMode="Enabled">
-            <Grid x:Name="AccountDetailWindow" Background="#FF165D43" FocusVisualPrimaryBrush="White" Height="545">
-                <TextBox x:Name="accountNameTextBox" Margin="48,134,0,0" Text="" VerticalAlignment="Top" PlaceholderText="Enter account name" TextChanged="accountNameTextbox_TextChanged" Background="#66FFFFFF" HorizontalAlignment="Left" Width="422"/>
-                <TextBlock x:Name="accountNameText" Margin="48,110,0,0" Text="Account name:" TextWrapping="Wrap" VerticalAlignment="Top" HorizontalAlignment="Left" Width="100"/>
-                <TextBlock x:Name="usernameText" HorizontalAlignment="Left" Margin="48,198,0,0" Text="Username:" TextWrapping="Wrap" VerticalAlignment="Top" Width="82"/>
-                <TextBox x:Name="usernameTextBox" Margin="48,222,0,0" Text=""  VerticalAlignment="Top" HorizontalAlignment="Left" Width="422" PlaceholderText="Enter username" TextChanged="usernameTextBox_TextChanged" Background="#66FFFFFF"/>
-                <TextBlock x:Name="emailText" HorizontalAlignment="Left" Margin="48,293,0,0" Text="Email:" TextWrapping="Wrap" VerticalAlignment="Top" Width="45"/>
-                <TextBox x:Name="emailTextBox" Margin="48,317,0,0" Text="" VerticalAlignment="Top" HorizontalAlignment="Left" Width="422" PlaceholderText="Enter email" TextChanged="emailTextBox_TextChanged" Background="#66FFFFFF"/>
-                <TextBlock x:Name="passwordText" HorizontalAlignment="Left" Margin="48,388,0,0" Text="Password:" VerticalAlignment="Top" Width="77"/>
-                <TextBox x:Name="passwordTextBox" Margin="48,412,0,0" Text="" VerticalAlignment="Top" HorizontalAlignment="Left" Width="422" PlaceholderText="Enter password or generate below" TextChanged="passwordTextBox_TextChanged" Background="#66FFFFFF"/>
-                <TextBlock x:Name="accountNameHeader" Foreground="White" FontSize="25" Text="New account" FontWeight="Normal" FontStyle="Normal" Margin="48,44,0,0" HorizontalAlignment="Left" Width="886" Height="45" VerticalAlignment="Top"/>
-                <Button x:Name="copyPasswordButton" ToolTipService.ToolTip="Copy password to clipboard" FontFamily="Segoe MDL2 Assets" Content="&#xE8C8;" Margin="435,449,0,0" VerticalAlignment="Top" Width="35" Click="copyPasswordButton_Click" Height="32" FontSize="16"/>
-                <Button x:Name="copyUsernameButton" ToolTipService.ToolTip="Copy username to clipboard" FontFamily="Segoe MDL2 Assets" Content="&#xE8C8;" Margin="435,259,0,0" VerticalAlignment="Top" Width="35" Click="copyUsernameButton_Click" Height="32" FontSize="16"/>
-                <Button x:Name="copyEmailButton" ToolTipService.ToolTip="Copy email to clipboard" FontFamily="Segoe MDL2 Assets" Content="&#xE8C8;" Margin="435,354,0,0" VerticalAlignment="Top" Width="35" Click="copyEmailButton_Click" Height="32" FontSize="16"/>
-                <Grid x:Name="AccountWindowSpacer" Background="#FF165D43" FocusVisualPrimaryBrush="#FF165D43" Height="30" VerticalAlignment="Top" Margin="3,486,0,0" d:IsLocked="True"/>
-                <Button x:Name="generatePasswordButton" Content="Generate password" Margin="48,449,0,0" VerticalAlignment="Top" Width="150" Click="copyPasswordButton_Click">
-                    <Button.Flyout>
-                        <Flyout x:Name="passwordGeneratorFlyout" Placement="Bottom" Opened="passwordGeneratorFlyout_Opened">
-                            <Flyout.FlyoutPresenterStyle>
-                                <Style TargetType="FlyoutPresenter">
-                                    <Setter Property="MinWidth" Value="200"/>
-                                </Style>
-                            </Flyout.FlyoutPresenterStyle>
-                            <StackPanel>
-                                <TextBox x:Name="generateResultBox" Text="password" Margin="0,0,0,10" MaxWidth="170" IsReadOnly="True"/>
-                                <MenuFlyoutSeparator/>
-                                <TextBlock Text="Length:"/>
-                                <Slider x:Name="generateLengthSlider" Minimum="4" Maximum="100" Value="16" ValueChanged="generateLengthSlider_ValueChanged"  />
-                                <MenuFlyoutSeparator/>
-                                <CheckBox x:Name="generateCapitalsOption" Content="Uppercase (A-Z)" IsChecked="True" Click="generateCapitalsOption_Click"/>
-                                <CheckBox x:Name="generateLowercaseOption" Content="Lowercase (a-z)" IsChecked="True" Click="generateLowercaseOption_Click"/>
-                                <CheckBox x:Name="generateNumbersOption" Content="Numbers (0-9)" IsChecked="True" Click="generateNumbersOption_Click"/>
-                                <CheckBox x:Name="generateSymbolsOption" Content="Symbols" IsChecked="True" Click="generateSymbolsOption_Click"/>
-                                <MenuFlyoutSeparator/>
-                                <Button x:Name="regenerateGeneratedButton" Content="Regenerate password" HorizontalAlignment="Stretch" Margin="0,10,0,10" Click="regenerateGeneratedButton_Click"/>
-                                <Button x:Name="storeGeneratedButton" Content="Use password" HorizontalAlignment="Stretch" Click="storeGeneratedButton_Click"/>
-                            </StackPanel>
-                        </Flyout>
-                    </Button.Flyout>
-                </Button>
-                <TextBox x:Name="notesTextBox" Margin="509,134,58,0" Text="" TextWrapping="Wrap" Height="347" VerticalAlignment="Top" AcceptsReturn="True" PlaceholderText="Enter notes" TextChanged="notesTextBox_TextChanged" Background="#66FFFFFF"/>
-                <TextBlock x:Name="notesText" HorizontalAlignment="Left" Margin="509,110,0,0" Text="Notes:" TextWrapping="Wrap" VerticalAlignment="Top" Height="22"/>
-            </Grid>
-        </ScrollViewer>
-        <Grid x:Name="StatusBar" Background="#FF26956C" Margin="266,0,0,0" Height="27" VerticalAlignment="Bottom" Grid.Row="1">
-            <TextBlock x:Name="timeSinceBreachText" HorizontalAlignment="Left" Margin="10,2,0,0" Text="Last password breach check:" TextWrapping="Wrap" VerticalAlignment="Top" FocusVisualPrimaryBrush="Black" Foreground="#FFAAAAAA"/>
-            <Button x:Name="refreshBreachCheckButton" ToolTipService.ToolTip="Refresh breach check" FontFamily="Segoe MDL2 Assets" Content="&#xE72C;" Height="27" Margin="326,0,0,0" Width="30" FontSize="10" Click="refreshBreachCheckButton_Click"/>
-            <TextBlock x:Name="breachProviderText" TextWrapping="Wrap" VerticalAlignment="Center" FocusVisualPrimaryBrush="Black" Foreground="#FFB6B6B6" Height="23" HorizontalAlignment="Right" Width="298"><Run Text="Breach checking provided by HaveIBeenPwned"/><LineBreak/><Run/></TextBlock>
-        </Grid>
-        <Grid x:Name="OptionBar" Background="#FF20805C" Margin="266,0,0,27" Height="60" VerticalAlignment="Bottom" Grid.Row="1">
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Width="191">
-                <Button x:Name="deleteEntryButton" ToolTipService.ToolTip="Delete account" FontFamily="Segoe MDL2 Assets" Content="&#xE74D;" Height="47" IsEnabled="False" Width="50" Click="deleteEntryButton_Click" Margin="10,-2,0,0" FontSize="24"/>
-                <Button x:Name="revertButton" ToolTipService.ToolTip="Revert changes" FontFamily="Segoe MDL2 Assets" Content="&#xE750;" Height="47" Width="50" IsEnabled="False" Click="revertButton_Click" Margin="10,-2,0,0" FontSize="24"/>
-                <Button x:Name="saveButton" ToolTipService.ToolTip="Save account" FontFamily="Segoe MDL2 Assets" Content="&#xE74E;" Height="47" IsEnabled="False" Width="50" Click="saveButton_Click" Margin="10,-2,0,0" FontSize="24"/>
-            </StackPanel>
         </Grid>
         <Rectangle x:Name="loginRectangle" Grid.Row="1" Fill="#FF26956C" d:IsHidden="True"/>
         <Grid.Resources>

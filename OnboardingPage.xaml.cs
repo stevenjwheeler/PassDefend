@@ -25,6 +25,7 @@ namespace PassProtect
         public OnboardingPage()
         {
             this.InitializeComponent();
+            versionText.Text = "Version " + MainPage.GetAppVersion();
         }
     }
 }
