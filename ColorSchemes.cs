@@ -41,7 +41,7 @@ namespace PassProtect
         public static void Green(Grid AccountDetailWindow, Rectangle MainBackground , Grid OptionBar, Grid StatusBar, Grid SideBar, ListView accountList, Rectangle loginRectangle)
         {
             AccountDetailWindow.Background = GetSolidColorBrush("FF165D43");
-            MainBackground .Fill = GetSolidColorBrush("FF165D43");
+            MainBackground.Fill = GetSolidColorBrush("FF165D43");
             OptionBar.Background = GetSolidColorBrush("FF19664A");
             StatusBar.Background = GetSolidColorBrush("FF1E7957");
             SideBar.Background = GetSolidColorBrush("FF26956C");
@@ -55,7 +55,7 @@ namespace PassProtect
         public static void Red(Grid AccountDetailWindow, Rectangle MainBackground , Grid OptionBar, Grid StatusBar, Grid SideBar, ListView accountList, Rectangle loginRectangle)
         {
             AccountDetailWindow.Background = GetSolidColorBrush("FF5D1616");
-            MainBackground .Fill = GetSolidColorBrush("FF5D1616");
+            MainBackground.Fill = GetSolidColorBrush("FF5D1616");
             OptionBar.Background = GetSolidColorBrush("FF802020");
             StatusBar.Background = GetSolidColorBrush("FF952626");
             SideBar.Background = GetSolidColorBrush("FF952626");
@@ -68,7 +68,7 @@ namespace PassProtect
         public static void Purple(Grid AccountDetailWindow, Rectangle MainBackground , Grid OptionBar, Grid StatusBar, Grid SideBar, ListView accountList, Rectangle loginRectangle)
         {
             AccountDetailWindow.Background = GetSolidColorBrush("FF40165D");
-            MainBackground .Fill = GetSolidColorBrush("FF40165D");
+            MainBackground.Fill = GetSolidColorBrush("FF40165D");
             OptionBar.Background = GetSolidColorBrush("FF4C2080");
             StatusBar.Background = GetSolidColorBrush("FF6D2695");
             SideBar.Background = GetSolidColorBrush("FF6D2695");
@@ -81,7 +81,7 @@ namespace PassProtect
         public static void Black(Grid AccountDetailWindow, Rectangle MainBackground , Grid OptionBar, Grid StatusBar, Grid SideBar, ListView accountList, Rectangle loginRectangle)
         {
             AccountDetailWindow.Background = GetSolidColorBrush("FF1B1B1B");
-            MainBackground .Fill = GetSolidColorBrush("FF1B1B1B");
+            MainBackground.Fill = GetSolidColorBrush("FF1B1B1B");
             OptionBar.Background = GetSolidColorBrush("FF171717");
             StatusBar.Background = GetSolidColorBrush("FF0F0F0F");
             SideBar.Background = GetSolidColorBrush("FF0F0F0F");
