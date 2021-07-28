@@ -139,6 +139,7 @@
     <Compile Include="BreachCheck.cs" />
     <Compile Include="ColorSchemes.cs" />
     <Compile Include="DataAccess.cs" />
+    <Compile Include="DiagnosticMode.cs" />
     <Compile Include="ExportDialog.xaml.cs">
       <DependentUpon>ExportDialog.xaml</DependentUpon>
     </Compile>

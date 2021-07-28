@@ -7,7 +7,9 @@ using System.Security.Principal;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.DataTransfer;
+using Windows.Networking.Connectivity;
 using Windows.Storage;
+using Windows.System.Profile;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -203,28 +205,28 @@ namespace PassProtect
                 string fileContent = await FileIO.ReadTextAsync(colorschemefile);
                 if (fileContent == "green")
                 {
-                    ColorSchemes.Green(AccountDetailWindow, AccountWindowSpacer, NoAccountWindow, OptionBar, StatusBar, SideBar, accountList, loginRectangle);
+                    ColorSchemes.Green(AccountDetailWindow, MainBackground, OptionBar, StatusBar, SideBar, accountList, loginRectangle);
                 }
                 else if (fileContent == "red")
                 {
-                    ColorSchemes.Red(AccountDetailWindow, AccountWindowSpacer, NoAccountWindow, OptionBar, StatusBar, SideBar, accountList, loginRectangle);
+                    ColorSchemes.Red(AccountDetailWindow, MainBackground, OptionBar, StatusBar, SideBar, accountList, loginRectangle);
                 }
                 else if (fileContent == "purple")
                 {
-                    ColorSchemes.Purple(AccountDetailWindow, AccountWindowSpacer, NoAccountWindow, OptionBar, StatusBar, SideBar, accountList, loginRectangle);
+                    ColorSchemes.Purple(AccountDetailWindow, MainBackground, OptionBar, StatusBar, SideBar, accountList, loginRectangle);
                 }
                 else if (fileContent == "black")
                 {
-                    ColorSchemes.Black(AccountDetailWindow, AccountWindowSpacer, NoAccountWindow, OptionBar, StatusBar, SideBar, accountList, loginRectangle);
+                    ColorSchemes.Black(AccountDetailWindow, MainBackground, OptionBar, StatusBar, SideBar, accountList, loginRectangle);
                 }
                 else
                 {
-                    ColorSchemes.Green(AccountDetailWindow, AccountWindowSpacer, NoAccountWindow, OptionBar, StatusBar, SideBar, accountList, loginRectangle);
+                    ColorSchemes.Green(AccountDetailWindow, MainBackground, OptionBar, StatusBar, SideBar, accountList, loginRectangle);
                 }
             }
             else //if colorscheme file does not exist
             {
-                ColorSchemes.Green(AccountDetailWindow, AccountWindowSpacer, NoAccountWindow, OptionBar, StatusBar, SideBar, accountList, loginRectangle);
+                ColorSchemes.Green(AccountDetailWindow, MainBackground, OptionBar, StatusBar, SideBar, accountList, loginRectangle);
             }
         }
 
@@ -553,7 +555,7 @@ namespace PassProtect
         private async void MenuFlyoutItem_Click_1(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
             //change colour green
-            ColorSchemes.Green(AccountDetailWindow, AccountWindowSpacer, NoAccountWindow, OptionBar, StatusBar, SideBar, accountList, loginRectangle);
+            ColorSchemes.Green(AccountDetailWindow, MainBackground, OptionBar, StatusBar, SideBar, accountList, loginRectangle);
             StorageFile colorschemefile = await localFolder.CreateFileAsync("colorScheme", CreationCollisionOption.OpenIfExists);
             await FileIO.WriteTextAsync(colorschemefile, "green");
         }
@@ -561,7 +563,7 @@ namespace PassProtect
         private async void MenuFlyoutItem_Click_2(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
             //change colour red
-            ColorSchemes.Red(AccountDetailWindow, AccountWindowSpacer, NoAccountWindow, OptionBar, StatusBar, SideBar, accountList, loginRectangle);
+            ColorSchemes.Red(AccountDetailWindow, MainBackground, OptionBar, StatusBar, SideBar, accountList, loginRectangle);
             StorageFile colorschemefile = await localFolder.CreateFileAsync("colorScheme", CreationCollisionOption.OpenIfExists);
             await FileIO.WriteTextAsync(colorschemefile, "red");
         }
@@ -569,7 +571,7 @@ namespace PassProtect
         private async void MenuFlyoutItem_Click_3(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
             //change colour purple
-            ColorSchemes.Purple(AccountDetailWindow, AccountWindowSpacer, NoAccountWindow, OptionBar, StatusBar, SideBar, accountList, loginRectangle);
+            ColorSchemes.Purple(AccountDetailWindow, MainBackground, OptionBar, StatusBar, SideBar, accountList, loginRectangle);
             StorageFile colorschemefile = await localFolder.CreateFileAsync("colorScheme", CreationCollisionOption.OpenIfExists);
             await FileIO.WriteTextAsync(colorschemefile, "purple");
         }
@@ -577,7 +579,7 @@ namespace PassProtect
         private async void MenuFlyoutItem_Click_4(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
             //change colour black
-            ColorSchemes.Black(AccountDetailWindow, AccountWindowSpacer, NoAccountWindow, OptionBar, StatusBar, SideBar, accountList, loginRectangle);
+            ColorSchemes.Black(AccountDetailWindow, MainBackground, OptionBar, StatusBar, SideBar, accountList, loginRectangle);
             StorageFile colorschemefile = await localFolder.CreateFileAsync("colorScheme", CreationCollisionOption.OpenIfExists);
             await FileIO.WriteTextAsync(colorschemefile, "black");
         }
@@ -687,9 +689,18 @@ namespace PassProtect
             {
                 Title = "PassProtect (Windows UWP) v" + GetAppVersion(),
                 Content = "You are running PassProtect (Windows UWP) version " + GetAppVersion() + ".\r\nwww.stevenwheeler.co.uk/passprotect\r\n\r\nPassProtect uses the HaveIBeenPwned Passwords API, licenced under a Creative Commons Attribution 4.0 International License, to provide password breach checking.\r\n\r\nPassword breach checking is secured by not transmitting the whole password and encoding the characters before transmission with SHA-1. All transmission is performed over HTTPS, and the API responds with many false results so that the real inputted password cannot be determined by an onlooker.\r\n\r\nMade in the UK.\r\nThank you for using PassProtect! ❤️",
-                PrimaryButtonText = "Okay"
+                PrimaryButtonText = "Okay",
+                SecondaryButtonText = "Diagnostics"
             };
             ContentDialogResult result = await versionInfoDialog.ShowAsync();
+            if (result == ContentDialogResult.Primary)
+            {
+                return;
+            }
+            else
+            {
+                DiagnosticMode.openDiagnostics();
+            }
         }
     }
 }
