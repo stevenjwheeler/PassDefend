@@ -5,21 +5,22 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Background="#FF20805C">
+    Background="#FF165D43">
 
     <ScrollViewer>
         <Grid Grid.Row="3" Grid.RowSpan="3">
             <Grid.RowDefinitions>
-                <RowDefinition Height="10" MaxHeight="10" MinHeight="10" />
+                <RowDefinition Height="30" MaxHeight="30" MinHeight="30" />
                 <RowDefinition Height="75" MinHeight="75" MaxHeight="75" />
-                <RowDefinition Height="50" MaxHeight="50" MinHeight="50" />
+                <RowDefinition Height="25" MaxHeight="25" MinHeight="25" />
                 <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
+                <RowDefinition Height="0.25*" />
+                <RowDefinition Height="30" MaxHeight="30" MinHeight="30" />
             </Grid.RowDefinitions>
             <TextBlock x:Name="welcomeText" TextWrapping="Wrap" FontSize="36" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="0" Grid.Row="1" Text="Welcome to PassProtect" />
             <TextBlock x:Name="versionText" TextWrapping="Wrap" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="0" Grid.Row="2" Text="Version &lt;version&gt;" />
             <TextBlock x:Name="programDescriptionText" TextWrapping="Wrap" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" Grid.Column="0" Grid.Row="3" Text="PassProtect is a password manager that keeps all your accounts securely encrypted locally on your device, not in a companies data center like other password managers, where you have no control over how and where your data is stored.&#x0a;&#x0a;PassProtect can also securely check your passwords against reported breaches online and alert you when a password has been breached.&#x0a;&#x0a;It can even help you create secure, randomized passwords to keep your online accounts safe." Padding="40,40,40,40"/>
-            <Button x:Name="getStartedButton" ToolTipService.ToolTip="Lets start!" Content="Get started" HorizontalAlignment="Center" Grid.Column="0" Grid.Row="4" Width="150" Height="64" />
+            <Button x:Name="getStartedButton" ToolTipService.ToolTip="Lets start!" Content="Get started" HorizontalAlignment="Center" Grid.Column="0" Grid.Row="4" Width="150" Height="64" Click="getStartedButton_Click" />
         </Grid>
     </ScrollViewer>
 </Page>

@@ -98,7 +98,7 @@ namespace PassProtect
             ContentDialog diagnosticsDialog = new ContentDialog
             {
                 Title = "PassProtect v" + MainPage.GetAppVersion() + " diagnostics",
-                Content = "Diagnostics generated: " + DateTime.Now + "\r\nDiagnostic Generator v1.0.0 on PassProtect v" + MainPage.GetAppVersion() + "\r\n\r\nMachine name: " + computerName + "\r\nWindows version: " + osVersion + "\r\n\r\nHash present: " + hashPresent + "\r\nCore present: " + corePresent + "\r\nGeneration settings: " + savedGenSettingsPresent + "\r\nActive color scheme: " + activeColorScheme + "\r\n\r\nCurrent database size: " + dbfilesize.ToString("0.0000") + " MB (" + bytes + " bytes)",
+                Content = "Diagnostics generated: " + DateTime.Now + "\r\nUsing: DiagnosticEngine1 on PassProtect v" + MainPage.GetAppVersion() + "\r\n\r\nMachine name: " + computerName + "\r\nWindows version: " + osVersion + "\r\n\r\nHash present: " + hashPresent + "\r\nCore present: " + corePresent + "\r\nGeneration settings: " + savedGenSettingsPresent + "\r\nActive color scheme: " + activeColorScheme + "\r\n\r\nCurrent database size: " + dbfilesize.ToString("0.0000") + " MB (" + bytes + " bytes)",
                 PrimaryButtonText = "Okay",
             };
             ContentDialogResult result = await diagnosticsDialog.ShowAsync();

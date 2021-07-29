@@ -7,6 +7,11 @@
     mc:Ignorable="d">
 
     <Grid x:Name="MainWindowGrid">
+        <Grid.Resources>
+            <Storyboard x:Name="fadeLoginBackground">
+                <FadeOutThemeAnimation Storyboard.TargetName="loginRectangle" SpeedRatio="0.5"/>
+            </Storyboard>
+        </Grid.Resources>
         <!--TITLE BAR-->
         <Grid.RowDefinitions>
             <!--rendering the title bar-->
@@ -93,16 +98,6 @@
             </StackPanel>
         </Grid>
         <Grid x:Name="SideBar" Background="#FF26956C" MinWidth="266" HorizontalAlignment="Left" Width="266" Grid.Column="0" Grid.RowSpan="4" CornerRadius="0,12,12,0">
-            <StackPanel x:Name="sideBarSearch" Margin="11,11,0,11" HorizontalAlignment="Left" Width="242">
-                <!--rendering title-->
-                <TextBlock Foreground="White" FontSize="25" HorizontalAlignment="Center" Text="PassProtect" FontWeight="Normal" FontStyle="Normal" Height="45"/>
-
-                <!--rendering search and add button-->
-                <StackPanel Orientation="Horizontal" VerticalAlignment="Top" Grid.Column="1" HorizontalAlignment="Center">
-                    <TextBox x:Name="SearchBox" PlaceholderText="Search accounts" Margin="0,0,10,0" Width="193" TextChanged="SearchBox_TextChanged" Background="#66FFFFFF"/>
-                    <Button x:Name="addAccountButton" ToolTipService.ToolTip="Add new account" FontFamily="Segoe MDL2 Assets" Content="&#xE710;" Click="addAccountButton_Click" Height="33"/>
-                </StackPanel>
-            </StackPanel>
             <ListView x:Name="accountList" Margin="0,100,0,56" Background="#FF739E8E" HorizontalAlignment="Center" Width="246" SelectionChanged="accountList_SelectionChanged">
                 <ListView.ItemTemplate>
                     <DataTemplate>
@@ -120,6 +115,16 @@
                     </Style>
                 </ListView.ItemContainerStyle>
             </ListView>
+            <StackPanel x:Name="sideBarSearch" Margin="11,11,0,11" HorizontalAlignment="Left" Width="242">
+                <!--rendering title-->
+                <TextBlock Foreground="White" FontSize="25" HorizontalAlignment="Center" Text="PassProtect" FontWeight="Normal" FontStyle="Normal" Height="45"/>
+
+                <!--rendering search and add button-->
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Top" Grid.Column="1" HorizontalAlignment="Center">
+                    <TextBox x:Name="SearchBox" PlaceholderText="Search accounts" Margin="0,0,10,0" Width="193" TextChanged="SearchBox_TextChanged" Background="#66FFFFFF"/>
+                    <Button x:Name="addAccountButton" ToolTipService.ToolTip="Add new account" FontFamily="Segoe MDL2 Assets" Content="&#xE710;" Click="addAccountButton_Click" Height="33"/>
+                </StackPanel>
+            </StackPanel>
             <Button x:Name="menuButton" ToolTipService.ToolTip="Open the menu" Content="Menu" Margin="10,0,10,11" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Height="34">
                 <Button.Flyout>
                     <MenuFlyout>
@@ -171,11 +176,7 @@
             </Button>
         </Grid>
         <Rectangle x:Name="loginRectangle" Grid.Row="0" Grid.RowSpan="4" Grid.Column="0" Grid.ColumnSpan="2" Fill="#FF26956C" d:IsHidden="True"/>
-        <Grid.Resources>
-            <Storyboard x:Name="fadeLoginBackground">
-                <FadeOutThemeAnimation Storyboard.TargetName="loginRectangle" SpeedRatio="0.5"/>
-            </Storyboard>
-        </Grid.Resources>
+        <TextBlock x:Name="decryptingText" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Grid.RowSpan="4" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" Margin="0,0,0,0" TextWrapping="Wrap" Text="PassProtect&#x0a;&#x0a;Decrypting and logging in...&#x0a;This should only take a second" d:IsHidden="True"/>
         <!--END OF APP CONTENT-->
     </Grid>
 </Page>

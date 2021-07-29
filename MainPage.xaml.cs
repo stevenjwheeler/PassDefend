@@ -3,13 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Security.Principal;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.DataTransfer;
-using Windows.Networking.Connectivity;
 using Windows.Storage;
-using Windows.System.Profile;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -24,7 +21,7 @@ namespace PassProtect
         public static string userpass { get; set; }
         public bool newaccount = false;
         public int selectedID = 0;
-        public int activeWelcome = 0; //change to bool?? this is part of new onboarding so will be checked in future
+        public static bool welcomeActive { get; set; }
         public static SQLiteConnection dbconnection { get; set; }
 
         //prepare storage for the accounts
@@ -35,11 +32,11 @@ namespace PassProtect
             //initialize the window
             this.InitializeComponent();
 
-            //Hide the account viewer window so that the first thing the user will see after login is the "choose an account" message
-            this.AccountDetailScroller.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
-
             //stylize the window to match the colour scheme of the application
             ColorScheme_CheckForScheme();
+
+            //collapse the account details so that the "choose an account" screen is displayed first
+            AccountDetailScroller.Visibility = Visibility.Collapsed;
 
             //inform of page load completion
             Loaded += Page_Loaded;
@@ -64,8 +61,12 @@ namespace PassProtect
             }
             else //if login file does not exist
             {
-                //Frame.Navigate(typeof(OnboardingPage)); //navigate to the new onboarding page
-                CreatePassword(); //comment this line out if using the new onboarding page
+                welcomeActive = true;
+                Frame.Navigate(typeof(OnboardingPage)); //navigate to the new onboarding page
+                if (welcomeActive == false)
+                {
+                    CreatePassword(); //comment this line out if using the new onboarding page
+                }
             }
         }
 
@@ -95,6 +96,7 @@ namespace PassProtect
                     //then load the stored settings of the password generator, if applicable
                     PassGenerator.loadSettings(generateLowercaseOption, generateCapitalsOption, generateNumbersOption, generateSymbolsOption, generateLengthSlider);
 
+                    decryptingText.Visibility = Visibility.Collapsed;
                     //hide the login rectangle to show the main ui
                     //note, the login rectangle is NOT a security feature, it is simply to make the login dialog look nice. The data behind remains encrypted and unloaded until the password is confirmed.
                     fadeLoginBackground.Begin(); //begin the fade animation
@@ -145,7 +147,7 @@ namespace PassProtect
                         Content = "The password to your '" + account.Name + "' account appeared in an online breach as identified by HaveIBeenPwned. Please change the password on the service as soon as possible.",
                         PrimaryButtonText = "Okay"
                     };
-                    ContentDialogResult result = await deleteConfirmDialog.ShowAsync();
+                    await deleteConfirmDialog.ShowAsync();
                 }
             }
             timeSinceBreachText.Text = "Last password breach check: " + DateTime.Now;
