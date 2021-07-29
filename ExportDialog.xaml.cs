@@ -22,12 +22,6 @@ namespace PassProtect
             this.InitializeComponent();
         }
 
-        //set declaration to 'nothing' when dialog opens
-        void PasswordCreation_Opened(ContentDialog sender, ContentDialogOpenedEventArgs args)
-        {
-            this.Result = ExportDialogResult.Nothing;
-        }
-
         private async void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
             bool passOK = false;

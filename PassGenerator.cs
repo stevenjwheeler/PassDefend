@@ -23,22 +23,22 @@ namespace PassProtect
             //determine the valid characters from the selected options
             if ((bool)generateLowercaseOption.IsChecked == true)
             {
-                validCharacters = validCharacters + lowercases;
+                validCharacters += lowercases;
             }
 
             if ((bool)generateCapitalsOption.IsChecked == true)
             {
-                validCharacters = validCharacters + uppercases;
+                validCharacters += uppercases;
             }
 
             if ((bool)generateNumbersOption.IsChecked == true)
             {
-                validCharacters = validCharacters + numbers;
+                validCharacters += numbers;
             }
 
             if ((bool)generateSymbolsOption.IsChecked == true)
             {
-                validCharacters = validCharacters + symbols;
+                validCharacters += symbols;
             }
 
             //if no options are selected...
