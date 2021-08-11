@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30621.155
+# Blend for Visual Studio Version 17
+VisualStudioVersion = 17.0.31512.422
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PassProtect", "PassProtect.csproj", "{8C649617-BC47-499A-905E-BB471BE2D051}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PassDefend", "PassDefend.csproj", "{8C649617-BC47-499A-905E-BB471BE2D051}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

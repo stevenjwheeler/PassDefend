@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using Windows.Storage;
 
-namespace PassProtect
+namespace PassDefend
 {
     class DataAccess
     {

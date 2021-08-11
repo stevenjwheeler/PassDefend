@@ -8,8 +8,8 @@
     <ProjectGuid>{8C649617-BC47-499A-905E-BB471BE2D051}</ProjectGuid>
     <OutputType>AppContainerExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>PassProtect</RootNamespace>
-    <AssemblyName>PassProtect</AssemblyName>
+    <RootNamespace>PassDefend</RootNamespace>
+    <AssemblyName>PassDefend</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.19041.0</TargetPlatformVersion>
