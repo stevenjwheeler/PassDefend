@@ -10,7 +10,7 @@ using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-namespace PassProtect
+namespace PassDefend
 {
     public partial class MainPage : Page
     {
@@ -42,7 +42,7 @@ namespace PassProtect
             Loaded += Page_Loaded;
             
             //set the user facing version information
-            versionInfo.Text = "PassProtect v" + GetAppVersion();
+            versionInfo.Text = "PassDefend v" + GetAppVersion();
         }
 
         //function that activates upon page load completion
@@ -261,7 +261,7 @@ namespace PassProtect
             ContentDialog deleteCompleteDialog = new ContentDialog
             {
                 Title = "Reset complete",
-                Content = "PassProtect has been reset and will now restart.",
+                Content = "PassDefend has been reset and will now restart.",
                 PrimaryButtonText = "Okay"
             };
             ContentDialogResult result = await deleteCompleteDialog.ShowAsync();
@@ -599,7 +599,7 @@ namespace PassProtect
             ContentDialog deleteConfirmDialog = new ContentDialog
             {
                 Title = "Are you sure you want to reset?",
-                Content = "You are about to completely reset PassProtect. \r\nThis will delete all information and restore PassProtect to being freshly installed. \r\n\nTHIS CANNOT BE REVERSED, so it is highly recommended to export the database before resetting. \r\n\nYou will be asked for your password to complete the reset.",
+                Content = "You are about to completely reset PassDefend. \r\nThis will delete all information and restore PassDefend to being freshly installed. \r\n\nTHIS CANNOT BE REVERSED, so it is highly recommended to export the database before resetting. \r\n\nYou will be asked for your password to complete the reset.",
                 PrimaryButtonText = "Reset",
                 SecondaryButtonText = "Cancel"
             };
@@ -689,8 +689,8 @@ namespace PassProtect
         {
             ContentDialog versionInfoDialog = new ContentDialog
             {
-                Title = "PassProtect (Windows UWP) v" + GetAppVersion(),
-                Content = "You are running PassProtect (Windows UWP) version " + GetAppVersion() + ".\r\nwww.stevenwheeler.co.uk/passprotect\r\n\r\nPassProtect uses the HaveIBeenPwned Passwords API, licenced under a Creative Commons Attribution 4.0 International License, to provide password breach checking.\r\n\r\nPassword breach checking is secured by not transmitting the whole password and encoding the characters before transmission with SHA-1. All transmission is performed over HTTPS, and the API responds with many false results so that the real inputted password cannot be determined by an onlooker.\r\n\r\nMade in the UK.\r\nThank you for using PassProtect! ❤️",
+                Title = "PassDefend (Windows UWP) v" + GetAppVersion(),
+                Content = "You are running PassDefend (Windows UWP) version " + GetAppVersion() + ".\r\nwww.stevenwheeler.co.uk/passdefend\r\n\r\nPassDefend uses the HaveIBeenPwned Passwords API, licenced under a Creative Commons Attribution 4.0 International License, to provide password breach checking.\r\n\r\nPassword breach checking is secured by not transmitting the whole password and encoding the characters before transmission with SHA-1. All transmission is performed over HTTPS, and the API responds with many false results so that the real inputted password cannot be determined by an onlooker.\r\n\r\nMade in the UK.\r\nThank you for using PassDefend! ❤️",
                 PrimaryButtonText = "Okay",
                 SecondaryButtonText = "Diagnostics"
             };

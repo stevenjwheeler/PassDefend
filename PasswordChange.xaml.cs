@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.UI.Xaml.Controls;
 
-namespace PassProtect
+namespace PassDefend
 {
     public enum PasswordChangeResult
     {

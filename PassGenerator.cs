@@ -4,7 +4,7 @@ using Windows.Storage;
 using System.Security.Cryptography;
 using Windows.UI.Xaml.Controls;
 
-namespace PassProtect
+namespace PassDefend
 {
     class PassGenerator
     {

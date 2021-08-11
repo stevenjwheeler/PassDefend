@@ -2,7 +2,7 @@
 using System.IO;
 using Windows.Storage;
 
-namespace PassProtect
+namespace PassDefend
 {
     class ImportExportEngine
     {
@@ -20,7 +20,7 @@ namespace PassProtect
                     dialogNotCompleted = false; //breaking loop because export ready
                     //prepare the file path
                     string dbPath = Path.Combine(ApplicationData.Current.LocalFolder.Path, "core");
-                    string fileExport = Path.Combine(exportPath, "PassProtectExport"); //+ DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss") + ".PASSPROTECT");
+                    string fileExport = Path.Combine(exportPath, "PassProtectExport"); //+ DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss") + ".PassDefend");
                     //close the database for copying
                     DataAccess.CloseDB(MainPage.dbconnection);
                     //copy the database

@@ -4,7 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.Web.Http;
 
-namespace PassProtect
+namespace PassDefend
 {
     public sealed partial class BreachCheck
     {
@@ -27,13 +27,13 @@ namespace PassProtect
 
             HttpClient httpClient = new HttpClient();
             var headers = httpClient.DefaultRequestHeaders;
-            string header = "passprotect";
+            string header = "PassDefend";
             if (!headers.UserAgent.TryParseAdd(header))
             {
                 throw new Exception("Invalid header value: " + header);
             }
 
-            header = "PassProtect/1.0 (compatible; MSIE 10.0; Windows NT 6.2; WOW64; Trident/6.0) PassProtect/1.0";
+            header = "PassDefend/1.0 (compatible; MSIE 10.0; Windows NT 6.2; WOW64; Trident/6.0) PassDefend/1.0";
             if (!headers.UserAgent.TryParseAdd(header))
             {
                 throw new Exception("Invalid header value: " + header);
